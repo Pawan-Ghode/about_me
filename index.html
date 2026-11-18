@@ -1,699 +1,2708 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Pawan Ghode — Java Backend Developer</title>
-<meta name="description" content="Pawan Ghode — Java Backend Developer. Spring Boot, microservices, Kafka, Redis. Building scalable REST APIs and high-concurrency systems." />
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
-<style>
-/* ============================================================
-   TOKENS
-   ============================================================ */
-:root{
-  --bg:#0b0f14;
-  --bg-elev:#11171f;
-  --surface:#141c26;
-  --line:#222d3a;
-  --line-soft:#1a232e;
-  --text:#e4eaf1;
-  --text-dim:#98a5b5;
-  --text-faint:#6b7a8c;
-  --green:#35d07f;
-  --blue:#5aa9fb;
-  --mono:"Fira Code", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  --sans:"Inter", system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  --radius:10px;
-  --maxw:1080px;
-  color-scheme: dark;
-}
-
-/* ============================================================
-   BASE
-   ============================================================ */
-*,*::before,*::after{box-sizing:border-box}
-html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
-body{
-  margin:0;
-  background:var(--bg);
-  color:var(--text);
-  font-family:var(--sans);
-  font-size:16px;
-  line-height:1.65;
-  -webkit-font-smoothing:antialiased;
-  overflow-x:hidden;
-}
-body::before{
-  content:"";
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  z-index:0;
-  background:
-    radial-gradient(900px 480px at 78% -8%, rgba(90,169,251,.10), transparent 62%),
-    radial-gradient(760px 420px at 6% 8%, rgba(53,208,127,.07), transparent 60%);
-}
-img{max-width:100%;display:block}
-a{color:inherit;text-decoration:none}
-h1,h2,h3{margin:0;line-height:1.2;letter-spacing:-.02em;font-weight:600}
-p{margin:0}
-ul{margin:0;padding:0;list-style:none}
-
-::selection{background:rgba(53,208,127,.28)}
-:focus-visible{outline:2px solid var(--green);outline-offset:3px;border-radius:4px}
-
-.wrap{width:100%;max-width:var(--maxw);margin:0 auto;padding:0 24px;position:relative;z-index:1}
-
-.skip{
-  position:absolute;left:-9999px;top:0;
-  background:var(--green);color:#06110b;padding:10px 16px;
-  font-family:var(--mono);font-size:13px;border-radius:0 0 8px 0;z-index:100;
-}
-.skip:focus{left:0}
-
-/* ============================================================
-   HEADER
-   ============================================================ */
-.site-header{
-  position:sticky;top:0;z-index:50;
-  background:rgba(11,15,20,.82);
-  backdrop-filter:blur(12px);
-  -webkit-backdrop-filter:blur(12px);
-  border-bottom:1px solid var(--line-soft);
-}
-.header-inner{display:flex;align-items:center;justify-content:space-between;height:62px}
-.brand{font-family:var(--mono);font-size:14.5px;font-weight:500;color:var(--text);white-space:nowrap}
-.brand .dot{color:var(--green)}
-.brand .caret{
-  display:inline-block;width:8px;height:15px;margin-left:3px;
-  background:var(--green);vertical-align:-2px;
-  animation:blink 1.15s steps(1,end) infinite;
-}
-@keyframes blink{0%,49%{opacity:1}50%,100%{opacity:0}}
-
-.nav{display:flex;align-items:center;gap:22px}
-.nav a{
-  font-family:var(--mono);font-size:13px;color:var(--text-dim);
-  padding:4px 0;border-bottom:1px solid transparent;transition:color .15s ease,border-color .15s ease;
-}
-.nav a:hover{color:var(--text)}
-.nav a.active{color:var(--green);border-bottom-color:var(--green)}
-
-.nav-toggle{
-  display:none;background:transparent;border:1px solid var(--line);
-  color:var(--text);width:40px;height:38px;border-radius:8px;font-size:16px;cursor:pointer;
-}
-
-/* ============================================================
-   SECTION SHELL
-   ============================================================ */
-.section{padding:92px 0;border-top:1px solid var(--line-soft)}
-.section-head{margin-bottom:38px}
-.section-head h2{
-  font-family:var(--mono);font-size:clamp(17px,2.4vw,20px);
-  font-weight:500;color:var(--text);letter-spacing:-.01em;
-}
-.section-head h2 .prompt{color:var(--green);margin-right:8px}
-.section-head h2 .file{color:var(--blue)}
-.section-note{font-family:var(--mono);font-size:12.5px;color:var(--text-faint);margin-top:8px}
-
-/* ============================================================
-   HERO
-   ============================================================ */
-.hero{padding:76px 0 84px}
-.hero-grid{
-  display:grid;grid-template-columns:minmax(0,1fr) 220px;
-  gap:56px;align-items:center;
-}
-.hero-status{
-  display:inline-flex;align-items:center;gap:9px;
-  font-family:var(--mono);font-size:12.5px;color:var(--text-dim);
-  border:1px solid var(--line);background:var(--bg-elev);
-  padding:6px 13px;border-radius:999px;margin-bottom:26px;
-}
-.pulse{
-  width:7px;height:7px;border-radius:50%;background:var(--green);
-  box-shadow:0 0 0 0 rgba(53,208,127,.55);animation:pulse 2.4s ease-out infinite;
-}
-@keyframes pulse{
-  0%{box-shadow:0 0 0 0 rgba(53,208,127,.5)}
-  70%{box-shadow:0 0 0 8px rgba(53,208,127,0)}
-  100%{box-shadow:0 0 0 0 rgba(53,208,127,0)}
-}
-.hero h1{
-  font-size:clamp(2.4rem,5.8vw,3.9rem);
-  font-weight:700;letter-spacing:-.035em;line-height:1.02;margin-bottom:14px;
-}
-.hero-role{
-  font-family:var(--mono);font-size:clamp(15px,2.2vw,17px);
-  color:var(--green);margin-bottom:22px;min-height:1.6em;
-}
-.hero-role .cursor{
-  display:inline-block;width:8px;height:1em;background:var(--green);
-  vertical-align:-3px;margin-left:2px;animation:blink 1.1s steps(1,end) infinite;
-}
-.hero-sub{color:var(--text-dim);font-size:17px;max-width:54ch;margin-bottom:34px}
-.cta-row{display:flex;flex-wrap:wrap;gap:14px;margin-bottom:34px}
-.btn{
-  display:inline-flex;align-items:center;gap:10px;
-  font-family:var(--mono);font-size:13.5px;font-weight:500;
-  padding:12px 20px;border-radius:8px;border:1px solid transparent;
-  cursor:pointer;transition:background .16s ease,border-color .16s ease,color .16s ease;
-}
-.btn-primary{background:var(--green);color:#05140c;font-weight:600}
-.btn-primary:hover{background:#4ae091}
-.btn-ghost{border-color:var(--line);color:var(--text);background:var(--bg-elev)}
-.btn-ghost:hover{border-color:var(--green);color:var(--green)}
-
-.hero-meta{display:flex;flex-wrap:wrap;gap:12px 30px}
-.hero-meta li{
-  font-family:var(--mono);font-size:12.5px;color:var(--text-faint);
-  display:flex;align-items:center;gap:8px;
-}
-.hero-meta i{color:var(--blue)}
-
-/* --- portrait: compact, soft rounded corners --- */
-.portrait{margin:0;width:100%;max-width:220px;justify-self:end}
-.portrait img{
-  width:100%;border-radius:16px;
-  border:1px solid var(--line);
-  filter:grayscale(.15) contrast(1.04);
-  box-shadow:0 18px 40px -24px rgba(0,0,0,.95);
-}
-.portrait figcaption{
-  font-family:var(--mono);font-size:11.5px;color:var(--text-faint);
-  margin-top:12px;text-align:center;
-}
-
-/* ============================================================
-   ABOUT
-   ============================================================ */
-.about-grid{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:48px}
-.about-text p{font-size:17px;color:var(--text-dim);max-width:64ch}
-.about-text p strong{color:var(--text);font-weight:600}
-.facts{border-left:2px solid var(--line);padding-left:20px;display:grid;gap:18px;align-content:start;margin:0}
-.fact dt{font-family:var(--mono);font-size:11.5px;color:var(--text-faint);margin-bottom:3px}
-.fact dd{margin:0;font-size:15px;color:var(--text)}
-.fact dd span{color:var(--text-dim);font-size:13.5px}
-
-/* ============================================================
-   EXPERIENCE
-   ============================================================ */
-.timeline{display:grid;gap:18px}
-.role{
-  border:1px solid var(--line);border-radius:var(--radius);
-  background:var(--bg-elev);padding:26px 28px;
-}
-.role-head{
-  display:flex;justify-content:space-between;align-items:baseline;
-  gap:18px;flex-wrap:wrap;margin-bottom:16px;
-}
-.role h3{font-size:19px}
-.role .company{font-family:var(--mono);font-size:13px;color:var(--green);margin-top:4px}
-.role .when{font-family:var(--mono);font-size:12.5px;color:var(--text-faint);text-align:right;white-space:nowrap}
-.role .when span{display:block}
-.role ul{display:grid;gap:11px}
-.role li{position:relative;padding-left:20px;color:var(--text-dim);font-size:15.5px}
-.role li::before{content:"▸";position:absolute;left:0;top:0;color:var(--blue);font-size:12px;line-height:1.7}
-.role li b{color:var(--text);font-weight:600}
-
-/* ============================================================
-   SKILLS
-   ============================================================ */
-.skills-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(288px,1fr));gap:18px}
-.skill-card{border:1px solid var(--line);border-radius:var(--radius);background:var(--bg-elev);padding:22px}
-.skill-card h3{
-  font-family:var(--mono);font-size:13px;font-weight:500;color:var(--blue);
-  margin-bottom:16px;display:flex;align-items:center;gap:9px;
-}
-.skill-card h3 i{font-size:13px;color:var(--text-faint);width:15px;text-align:center}
-.tags{display:flex;flex-wrap:wrap;gap:8px}
-.tag{
-  font-family:var(--mono);font-size:12.5px;color:var(--text-dim);
-  border:1px solid var(--line);background:var(--surface);
-  padding:5px 11px;border-radius:6px;
-}
-.skill-card:nth-child(2) h3,
-.skill-card:nth-child(4) h3{color:var(--green)}
-
-/* ============================================================
-   PROJECTS
-   ============================================================ */
-.projects{display:grid;gap:20px}
-.project{
-  border:1px solid var(--line);border-radius:var(--radius);
-  background:var(--bg-elev);padding:26px 28px;
-  display:grid;grid-template-columns:minmax(0,1fr) 210px;gap:34px;
-  transition:border-color .18s ease;
-}
-.project:hover{border-color:#2f3d4d}
-.project h3{font-size:20px;margin-bottom:6px}
-.project .subtitle{font-family:var(--mono);font-size:12.5px;color:var(--text-faint);margin-bottom:16px}
-.project ul{display:grid;gap:10px}
-.project li{position:relative;padding-left:20px;color:var(--text-dim);font-size:15.5px}
-.project li::before{content:"▸";position:absolute;left:0;top:0;color:var(--green);font-size:12px;line-height:1.7}
-.project li b{color:var(--text);font-weight:600}
-.stack{display:flex;flex-direction:column;gap:9px;align-content:start}
-.stack .stack-label{font-family:var(--mono);font-size:11px;color:var(--text-faint);margin-bottom:2px}
-.stack .chip{
-  font-family:var(--mono);font-size:12px;color:var(--text-dim);
-  border:1px solid var(--line-soft);border-left:2px solid var(--blue);
-  background:var(--surface);padding:5px 10px;border-radius:0 6px 6px 0;
-}
-
-/* ============================================================
-   ACHIEVEMENTS
-   ============================================================ */
-.achievements{display:grid;gap:14px}
-.ach{
-  display:grid;grid-template-columns:44px minmax(0,1fr);gap:18px;align-items:start;
-  border:1px solid var(--line);border-radius:var(--radius);background:var(--bg-elev);padding:22px 24px;
-}
-.ach-icon{
-  width:44px;height:44px;border-radius:9px;display:grid;place-items:center;
-  border:1px solid var(--line);background:var(--surface);color:var(--green);font-size:17px;
-}
-.ach:nth-child(2) .ach-icon{color:var(--blue)}
-.ach h3{font-size:16.5px;margin-bottom:5px}
-.ach p{color:var(--text-dim);font-size:15.5px;max-width:70ch}
-.ach .mono-num{font-family:var(--mono);color:var(--text);font-weight:500}
-
-/* ============================================================
-   CONTACT + FOOTER
-   ============================================================ */
-.contact{border:1px solid var(--line);border-radius:12px;background:var(--bg-elev);padding:40px 34px;text-align:center}
-.contact h2{font-size:clamp(1.6rem,4vw,2.1rem);margin-bottom:12px;letter-spacing:-.03em}
-.contact p{color:var(--text-dim);max-width:52ch;margin:0 auto 26px}
-.contact-actions{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
-
-.site-footer{border-top:1px solid var(--line-soft);padding:30px 0 40px}
-.footer-inner{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap}
-.footer-inner small{font-family:var(--mono);font-size:12.5px;color:var(--text-faint)}
-.socials{display:flex;gap:10px}
-.socials a{
-  width:40px;height:40px;border-radius:9px;display:grid;place-items:center;
-  border:1px solid var(--line);background:var(--bg-elev);color:var(--text-dim);
-  font-size:16px;transition:color .15s ease,border-color .15s ease;
-}
-.socials a:hover{color:var(--green);border-color:var(--green)}
-
-/* ============================================================
-   RESPONSIVE
-   ============================================================ */
-@media (max-width:900px){
-  .hero-grid{grid-template-columns:1fr;gap:38px}
-  .portrait{justify-self:start}
-  .about-grid{grid-template-columns:1fr;gap:34px}
-  .project{grid-template-columns:1fr;gap:22px}
-  .stack{flex-direction:row;flex-wrap:wrap}
-  .role .when{text-align:left}
-}
-@media (max-width:720px){
-  .nav-toggle{display:grid;place-items:center}
-  .nav{
-    position:absolute;top:62px;left:0;right:0;
-    flex-direction:column;align-items:stretch;gap:0;
-    background:var(--bg-elev);border-bottom:1px solid var(--line);
-    padding:6px 24px 14px;display:none;
-  }
-  .nav.open{display:flex}
-  .nav a{padding:11px 0;font-size:14px;border-bottom:1px solid var(--line-soft)}
-  .nav a.active{border-bottom-color:var(--line-soft)}
-  .section{padding:66px 0}
-  .hero{padding:52px 0 60px}
-  .contact{padding:32px 22px}
-  .footer-inner{flex-direction:column;align-items:flex-start}
-}
-@media (max-width:420px){
-  .wrap{padding:0 18px}
-  .btn{width:100%;justify-content:center}
-  .project,.role{padding:22px 20px}
-  .portrait{max-width:170px}
-}
-
-@media (prefers-reduced-motion:reduce){
-  html{scroll-behavior:auto}
-  *,*::before,*::after{animation:none!important;transition:none!important}
-}
-</style>
-</head>
-<body>
-<a class="skip" href="#main">Skip to content</a>
-
-<header class="site-header">
-  <div class="wrap header-inner">
-    <a class="brand" href="#top">pawan<span class="dot">.</span>ghode<span class="caret" aria-hidden="true"></span></a>
-    <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="nav" aria-label="Open menu">
-      <i class="fa-solid fa-bars" aria-hidden="true"></i>
-    </button>
-    <nav class="nav" id="nav" aria-label="Sections">
-      <a href="#about">about</a>
-      <a href="#experience">experience</a>
-      <a href="#skills">skills</a>
-      <a href="#projects">projects</a>
-      <a href="#achievements">achievements</a>
-      <a href="#contact">contact</a>
-    </nav>
-  </div>
-</header>
-
-<main id="main">
-
-  <!-- HERO -->
-  <section class="hero" id="top">
-    <div class="wrap hero-grid">
-      <div>
-        <p class="hero-status"><span class="pulse" aria-hidden="true"></span> Open to backend engineering roles</p>
-        <h1>Pawan Ghode</h1>
-        <p class="hero-role" id="typedRole" aria-label="Java Backend Developer">Java Backend Developer</p>
-        <p class="hero-sub">Building highly scalable RESTful APIs, optimizing database query performance, and handling high-concurrency systems.</p>
-        <div class="cta-row">
-          <a class="btn btn-primary" href="https://github.com/Pawan-Ghode" target="_blank" rel="noopener">
-            <i class="fa-brands fa-github" aria-hidden="true"></i> View GitHub
-          </a>
-          <a class="btn btn-ghost" href="#contact">
-            <i class="fa-regular fa-envelope" aria-hidden="true"></i> Contact Me
-          </a>
-        </div>
-        <ul class="hero-meta">
-          <li><i class="fa-solid fa-location-dot" aria-hidden="true"></i> Nagpur, India</li>
-          <li><i class="fa-solid fa-graduation-cap" aria-hidden="true"></i> B.Tech IT, 2026</li>
-          <li><i class="fa-solid fa-code" aria-hidden="true"></i> 400+ DSA problems solved</li>
-        </ul>
-      </div>
-
-      <figure class="portrait">
-        <img src="Profile-Photo.jpg" alt="Portrait of Pawan Ghode" width="220" height="263" />
-        <figcaption>Pawan Ghode</figcaption>
-      </figure>
-    </div>
-  </section>
-
-  <!-- ABOUT -->
-  <section class="section" id="about">
-    <div class="wrap">
-      <div class="section-head">
-        <h2><span class="prompt">$</span> cat <span class="file">about.md</span></h2>
-      </div>
-      <div class="about-grid">
-        <div class="about-text">
-          <p>B.Tech IT Graduate (2026) with a strong foundation in <strong>Java, Spring Boot, and microservices architecture</strong>. Proficient in Data Structures and Algorithms with a proven track record of writing clean, production-ready code. Successfully solved 400+ DSA problems on LeetCode and executed enterprise-level system architecture training at Accenture.</p>
-        </div>
-        <dl class="facts">
-          <div class="fact">
-            <dt>experience</dt>
-            <dd>Trainee S/4HANA Technical Architect <span>— Accenture</span></dd>
-          </div>
-          <div class="fact">
-            <dt>internship</dt>
-            <dd>Core Java Intern <span>— UniConverge Technologies</span></dd>
-          </div>
-          <div class="fact">
-            <dt>education</dt>
-            <dd>B.Tech, Information Technology <span>— YCCE Nagpur, CGPA 7.90</span></dd>
-          </div>
-        </dl>
-      </div>
-    </div>
-  </section>
-
-  <!-- EXPERIENCE -->
-  <section class="section" id="experience">
-    <div class="wrap">
-      <div class="section-head">
-        <h2><span class="prompt">$</span> cat <span class="file">experience.md</span></h2>
-      </div>
-      <div class="timeline">
-
-        <article class="role">
-          <div class="role-head">
-            <div>
-              <h3>Trainee S/4HANA Technical Architect</h3>
-              <p class="company">Accenture</p>
-            </div>
-            <p class="when"><span>06/2026 – 09/2026</span><span>Nagpur, India</span></p>
-          </div>
-          <ul>
-            <li>Configured enterprise-level system architecture and cloud integration utilizing <b>SAP BTP (Business Technology Platform)</b>.</li>
-            <li>Executed a seamless database migration simulation (Capstone), monitoring transaction logs and ensuring <b>zero data inconsistency</b> during high-load transitions.</li>
-          </ul>
-        </article>
-
-        <article class="role">
-          <div class="role-head">
-            <div>
-              <h3>Core Java Intern</h3>
-              <p class="company">UniConverge Technologies Pvt. Ltd.</p>
-            </div>
-            <p class="when"><span>03/2026 – 04/2026</span><span>Remote</span></p>
-          </div>
-          <ul>
-            <li>Engineered a secure <b>Banking Management System</b> using Core Java, implementing modular object-oriented architecture for scalable transaction processing.</li>
-            <li>Optimized data validation and database interaction logic, reducing application execution errors by <b>40%</b> and improving overall debugging efficiency.</li>
-          </ul>
-        </article>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- SKILLS -->
-  <section class="section" id="skills">
-    <div class="wrap">
-      <div class="section-head">
-        <h2><span class="prompt">$</span> ls <span class="file">skills/</span></h2>
-        <p class="section-note">5 directories · 19 entries</p>
-      </div>
-      <div class="skills-grid">
-        <article class="skill-card">
-          <h3><i class="fa-solid fa-terminal" aria-hidden="true"></i> Languages</h3>
-          <div class="tags">
-            <span class="tag">Java (11/17)</span><span class="tag">SQL</span><span class="tag">Python</span>
-          </div>
-        </article>
-        <article class="skill-card">
-          <h3><i class="fa-solid fa-layer-group" aria-hidden="true"></i> Backend &amp; Frameworks</h3>
-          <div class="tags">
-            <span class="tag">Spring Boot</span><span class="tag">Spring Security (JWT, OAuth2)</span>
-            <span class="tag">Hibernate (JPA)</span><span class="tag">Microservices</span>
-          </div>
-        </article>
-        <article class="skill-card">
-          <h3><i class="fa-solid fa-database" aria-hidden="true"></i> Databases &amp; Caching</h3>
-          <div class="tags">
-            <span class="tag">PostgreSQL</span><span class="tag">MySQL</span><span class="tag">Redis</span>
-          </div>
-        </article>
-        <article class="skill-card">
-          <h3><i class="fa-solid fa-diagram-project" aria-hidden="true"></i> Architecture &amp; Messaging</h3>
-          <div class="tags">
-            <span class="tag">REST API Design</span><span class="tag">Apache Kafka</span>
-            <span class="tag">MVC Pattern</span><span class="tag">System Design (HLD)</span>
-          </div>
-        </article>
-        <article class="skill-card">
-          <h3><i class="fa-solid fa-screwdriver-wrench" aria-hidden="true"></i> Tools &amp; Deployment</h3>
-          <div class="tags">
-            <span class="tag">Git</span><span class="tag">Docker</span><span class="tag">Postman</span>
-            <span class="tag">AWS (EC2 basics)</span><span class="tag">JUnit</span><span class="tag">Swagger</span>
-          </div>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <!-- PROJECTS -->
-  <section class="section" id="projects">
-    <div class="wrap">
-      <div class="section-head">
-        <h2><span class="prompt">$</span> git log <span class="file">--projects</span></h2>
-      </div>
-      <div class="projects">
-
-        <article class="project">
-          <div>
-            <h3>Scalable Movie Ticketing Backend</h3>
-            <p class="subtitle">BookMyShow clone · high-concurrency booking</p>
-            <ul>
-              <li>Architected a concurrent ticketing API using DB <b>pessimistic/optimistic locking</b> to prevent double-booking.</li>
-              <li>Implemented <b>Redis caching</b> for movie listings and theater layouts, reducing API response time by <b>60%</b>.</li>
-              <li>Containerized the service with Docker for consistent cross-environment deployment.</li>
-            </ul>
-          </div>
-          <div class="stack">
-            <span class="stack-label">stack</span>
-            <span class="chip">Java</span><span class="chip">Spring Boot</span><span class="chip">PostgreSQL</span>
-            <span class="chip">Redis</span><span class="chip">Docker</span>
-          </div>
-        </article>
-
-        <article class="project">
-          <div>
-            <h3>Fintech Payment Processing API</h3>
-            <p class="subtitle">Payment gateway simulation · event-driven</p>
-            <ul>
-              <li>Developed a robust payment gateway simulation with strict <b>ACID adherence</b> across transaction flows.</li>
-              <li>Integrated <b>Apache Kafka</b> as a message broker to decouple transaction services from notifications and invoicing.</li>
-              <li>Designed idempotent REST endpoints so retries during network failures never duplicate a deduction.</li>
-            </ul>
-          </div>
-          <div class="stack">
-            <span class="stack-label">stack</span>
-            <span class="chip">Spring Boot</span><span class="chip">MySQL</span><span class="chip">Apache Kafka</span>
-          </div>
-        </article>
-
-        <article class="project">
-          <div>
-            <h3>Smart Expense Analytics &amp; Budget Backend</h3>
-            <p class="subtitle">Personal finance API · stateless auth</p>
-            <ul>
-              <li>Implemented stateless user authentication using <b>JWT</b> across all protected endpoints.</li>
-              <li>Optimized complex SQL queries powering <b>automated budget alerts</b> and spending breakdowns.</li>
-              <li>Modelled expense and category relationships with Hibernate for clean, maintainable persistence.</li>
-            </ul>
-          </div>
-          <div class="stack">
-            <span class="stack-label">stack</span>
-            <span class="chip">Java</span><span class="chip">Spring Boot</span><span class="chip">Hibernate</span>
-            <span class="chip">MySQL</span><span class="chip">JWT</span>
-          </div>
-        </article>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- ACHIEVEMENTS -->
-  <section class="section" id="achievements">
-    <div class="wrap">
-      <div class="section-head">
-        <h2><span class="prompt">$</span> cat <span class="file">achievements.log</span></h2>
-      </div>
-      <div class="achievements">
-        <article class="ach">
-          <div class="ach-icon"><i class="fa-solid fa-code" aria-hidden="true"></i></div>
-          <div>
-            <h3>Algorithmic problem solving</h3>
-            <p>Solved <span class="mono-num">400+</span> DSA problems on LeetCode and secured a global rank under the <span class="mono-num">top 10%</span> in multiple Weekly Contests.</p>
-          </div>
-        </article>
-        <article class="ach">
-          <div class="ach-icon"><i class="fa-solid fa-file-lines" aria-hidden="true"></i></div>
-          <div>
-            <h3>Research &amp; AI integration</h3>
-            <p>Co-authored and successfully published an academic research paper on an AI-driven posture monitoring system (accepted <span class="mono-num">Aug 2026</span>).</p>
-          </div>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <!-- CONTACT -->
-  <section class="section" id="contact">
-    <div class="wrap">
-      <div class="contact">
-        <h2>Let's build something that scales</h2>
-        <p>Open to backend engineering roles and collaborations. The fastest way to reach me is email.</p>
-        <div class="contact-actions">
-          <a class="btn btn-primary" href="mailto:pawanghode85@gmail.com">
-            <i class="fa-regular fa-envelope" aria-hidden="true"></i> pawanghode85@gmail.com
-          </a>
-          <a class="btn btn-ghost" href="https://github.com/Pawan-Ghode" target="_blank" rel="noopener">
-            <i class="fa-brands fa-github" aria-hidden="true"></i> GitHub
-          </a>
-          <a class="btn btn-ghost" href="https://www.linkedin.com/in/pawan-ghode/" target="_blank" rel="noopener">
-            <i class="fa-brands fa-linkedin-in" aria-hidden="true"></i> LinkedIn
-          </a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-</main>
-
-<footer class="site-footer">
-  <div class="wrap footer-inner">
-    <small>© <span id="year">2026</span> Pawan Ghode. All rights reserved.</small>
-    <div class="socials">
-      <a href="https://github.com/Pawan-Ghode" target="_blank" rel="noopener" aria-label="GitHub"><i class="fa-brands fa-github" aria-hidden="true"></i></a>
-      <a href="https://www.linkedin.com/in/pawan-ghode/" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in" aria-hidden="true"></i></a>
-      <a href="mailto:pawanghode85@gmail.com" aria-label="Email"><i class="fa-regular fa-envelope" aria-hidden="true"></i></a>
-    </div>
-  </div>
-</footer>
-
-<script>
-(function () {
-  "use strict";
-
-  var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-  /* ---- current year ---- */
-  document.getElementById("year").textContent = new Date().getFullYear();
-
-  /* ---- mobile nav ---- */
-  var toggle = document.getElementById("navToggle");
-  var nav = document.getElementById("nav");
-
-  toggle.addEventListener("click", function () {
-    var open = nav.classList.toggle("open");
-    toggle.setAttribute("aria-expanded", String(open));
-    toggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
-    toggle.innerHTML = open
-      ? '<i class="fa-solid fa-xmark" aria-hidden="true"></i>'
-      : '<i class="fa-solid fa-bars" aria-hidden="true"></i>';
-  });
-
-  nav.addEventListener("click", function (e) {
-    if (e.target.tagName === "A" && nav.classList.contains("open")) {
-      nav.classList.remove("open");
-      toggle.setAttribute("aria-expanded", "false");
-      toggle.innerHTML = '<i class="fa-solid fa-bars" aria-hidden="true"></i>';
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pawan Janardhan Ghode — Java Backend & Distributed Systems Portfolio</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace']
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    :root {
+      --bg-primary: #070b11;
+      --bg-secondary: #0d131d;
+      --bg-card: rgba(15, 23, 36, 0.78);
+      --bg-card-hover: rgba(21, 32, 50, 0.92);
+      --text-primary: #f1f5f9;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --border-subtle: rgba(148, 163, 184, 0.14);
+      --border-accent: rgba(16, 185, 129, 0.45);
+      --accent-emerald: #10b981;
+      --accent-cyan: #06b6d4;
+      --accent-indigo: #6366f1;
     }
-  });
 
-  /* ---- active section in nav ---- */
-  var links = Array.prototype.slice.call(nav.querySelectorAll("a"));
-  var sections = links
-    .map(function (a) { return document.querySelector(a.getAttribute("href")); })
-    .filter(Boolean);
+    html.light-mode {
+      --bg-primary: #f8fafc;
+      --bg-secondary: #f1f5f9;
+      --bg-card: rgba(255, 255, 255, 0.92);
+      --bg-card-hover: rgba(255, 255, 255, 1);
+      --text-primary: #0f172a;
+      --text-secondary: #334155;
+      --text-muted: #64748b;
+      --border-subtle: rgba(15, 23, 42, 0.12);
+      --border-accent: rgba(5, 150, 105, 0.5);
+      --accent-emerald: #059669;
+      --accent-cyan: #0284c7;
+      --accent-indigo: #4f46e5;
+    }
 
-  if ("IntersectionObserver" in window) {
-    var observer = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (!entry.isIntersecting) return;
-        links.forEach(function (a) {
-          a.classList.toggle("active", a.getAttribute("href") === "#" + entry.target.id);
-        });
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: 'Inter', system-ui, sans-serif;
+      overflow-x: hidden;
+      transition: background-color 0.25s ease, color 0.25s ease;
+    }
+
+    .bg-grid-pattern {
+      background-size: 36px 36px;
+      background-image:
+        linear-gradient(to right, rgba(148, 163, 184, 0.05) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(148, 163, 184, 0.05) 1px, transparent 1px);
+    }
+
+    .glass-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .glass-card:hover {
+      background: var(--bg-card-hover);
+      border-color: rgba(16, 185, 129, 0.32);
+    }
+
+    .recruiter-spotlight {
+      transition: all 0.3s ease;
+    }
+
+    body.recruiter-active .recruiter-spotlight {
+      border-color: #10b981 !important;
+      box-shadow: 0 0 0 1px rgba(16, 185, 129, 0.4), 0 12px 30px -8px rgba(16, 185, 129, 0.22) !important;
+    }
+
+    .arch-node {
+      transition: all 0.3s ease;
+    }
+
+    .arch-node.active-step {
+      filter: drop-shadow(0 0 12px rgba(16, 185, 129, 0.75));
+    }
+
+    @keyframes pulseSlow {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.55; transform: scale(0.96); }
+    }
+
+    .animate-pulse-slow {
+      animation: pulseSlow 2.4s infinite ease-in-out;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--bg-primary);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(148, 163, 184, 0.25);
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(16, 185, 129, 0.5);
+    }
+
+    @media print {
+      .no-print {
+        display: none !important;
+      }
+      body {
+        background: #ffffff !important;
+        color: #000000 !important;
+      }
+    }
+  </style>
+</head>
+<body class="bg-grid-pattern selection:bg-emerald-500/30 selection:text-emerald-300">
+
+  <!-- Ambient Glows -->
+  <div class="pointer-events-none fixed inset-0 z-0 overflow-hidden no-print">
+    <div class="absolute -top-40 -left-40 h-96 w-96 rounded-full bg-emerald-500/10 blur-3xl"></div>
+    <div class="absolute top-1/3 -right-40 h-96 w-96 rounded-full bg-cyan-500/10 blur-3xl"></div>
+    <div class="absolute bottom-0 left-1/3 h-80 w-80 rounded-full bg-indigo-500/10 blur-3xl"></div>
+  </div>
+
+  <!-- Top Sticky Navigation -->
+  <header class="sticky top-0 z-40 border-b border-slate-800/80 bg-slate-950/85 backdrop-blur-xl no-print" id="top-nav">
+    <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
+      <!-- Brand Identity -->
+      <div class="flex items-center gap-3">
+        <a href="#hero" class="group flex items-center gap-2.5 focus:outline-none">
+          <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-emerald-500 to-cyan-500 font-mono text-sm font-bold text-slate-950 shadow-lg shadow-emerald-500/20 transition-transform group-hover:scale-105">
+            PG
+          </div>
+          <div>
+            <div class="flex items-center gap-1.5">
+              <span class="font-mono text-sm font-bold tracking-tight text-white">pawan.ghode</span>
+              <span class="rounded bg-emerald-500/15 px-1.5 py-0.5 font-mono text-[10px] font-semibold text-emerald-400 border border-emerald-500/30">v2.6</span>
+            </div>
+            <p class="text-[11px] text-slate-400 hidden sm:block">Java Backend &amp; Distributed Systems</p>
+          </div>
+        </a>
+      </div>
+
+      <!-- Desktop Navigation Links -->
+      <nav class="hidden lg:flex items-center gap-1 rounded-full border border-slate-800/90 bg-slate-900/70 px-3 py-1.5 text-xs font-medium text-slate-300">
+        <a href="#impact" class="rounded-full px-3 py-1 transition hover:bg-slate-800 hover:text-emerald-400">Impact</a>
+        <a href="#recruiter-match" class="rounded-full px-3 py-1 transition hover:bg-slate-800 hover:text-emerald-400">Role Matcher</a>
+        <a href="#architecture" class="rounded-full px-3 py-1 transition hover:bg-slate-800 hover:text-emerald-400">API Architecture</a>
+        <a href="#projects" class="rounded-full px-3 py-1 transition hover:bg-slate-800 hover:text-emerald-400">Projects</a>
+        <a href="#experience" class="rounded-full px-3 py-1 transition hover:bg-slate-800 hover:text-emerald-400">Experience</a>
+        <a href="#skills" class="rounded-full px-3 py-1 transition hover:bg-slate-800 hover:text-emerald-400">Skills</a>
+        <a href="#achievements" class="rounded-full px-3 py-1 transition hover:bg-slate-800 hover:text-emerald-400">Research &amp; DSA</a>
+        <a href="#contact" class="rounded-full px-3 py-1 transition hover:bg-slate-800 hover:text-emerald-400">Contact</a>
+      </nav>
+
+      <!-- Recruiter Utility Controls -->
+      <div class="flex items-center gap-2">
+        <button
+          id="recruiterModeBtn"
+          type="button"
+          onclick="toggleRecruiterMode()"
+          class="flex items-center gap-1.5 rounded-lg border border-emerald-500/40 bg-emerald-500/15 px-3 py-1.5 text-xs font-semibold text-emerald-300 shadow-sm transition hover:bg-emerald-500/25"
+          title="Toggle 15-Second Recruiter Fast-Scan Mode"
+        >
+          <i data-lucide="sparkles" class="h-3.5 w-3.5 text-emerald-400"></i>
+          <span>15s Recruiter Scan</span>
+          <span id="recruiterModeBadge" class="ml-1 rounded bg-emerald-400/20 px-1.5 py-0.2 font-mono text-[10px] text-emerald-300">OFF</span>
+        </button>
+
+        <button
+          type="button"
+          onclick="openResumeModal()"
+          class="hidden sm:flex items-center gap-1.5 rounded-lg border border-slate-700 bg-slate-900 px-3 py-1.5 text-xs font-medium text-slate-200 transition hover:border-slate-500 hover:bg-slate-800"
+        >
+          <i data-lucide="file-text" class="h-3.5 w-3.5 text-cyan-400"></i>
+          <span>Resume</span>
+        </button>
+
+        <button
+          type="button"
+          onclick="openCmdPalette()"
+          class="flex items-center gap-1.5 rounded-lg border border-slate-800 bg-slate-900/90 px-2.5 py-1.5 font-mono text-xs text-slate-400 transition hover:border-slate-600 hover:text-white"
+          title="Open Quick Command Palette (Ctrl+K / Cmd+K)"
+        >
+          <i data-lucide="terminal" class="h-3.5 w-3.5 text-emerald-400"></i>
+          <span class="hidden md:inline">⌘K</span>
+        </button>
+
+        <button
+          id="themeToggleBtn"
+          type="button"
+          onclick="toggleTheme()"
+          class="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-800 bg-slate-900/90 text-slate-300 transition hover:border-slate-600 hover:text-white"
+          title="Switch Dark / Light Theme"
+          aria-label="Switch Theme"
+        >
+          <i data-lucide="sun" class="h-4 w-4"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- 15-Second Recruiter Executive Brief Drawer (Expandable) -->
+  <section id="recruiterBriefBanner" class="hidden border-b border-emerald-500/30 bg-gradient-to-r from-emerald-950/70 via-slate-900/95 to-cyan-950/70 backdrop-blur-md no-print">
+    <div class="mx-auto max-w-7xl px-4 py-5 sm:px-6 lg:px-8">
+      <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+        <div class="flex items-start gap-3">
+          <div class="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-emerald-500/20 border border-emerald-500/40 text-emerald-300">
+            <i data-lucide="zap" class="h-5 w-5"></i>
+          </div>
+          <div>
+            <div class="flex flex-wrap items-center gap-2">
+              <h2 class="text-sm font-bold uppercase tracking-wider text-emerald-300">15-Second Recruiter Executive Summary</h2>
+              <span class="rounded-full bg-emerald-500/20 px-2.5 py-0.5 font-mono text-[11px] font-medium text-emerald-200">Immediate / 2026 Grad Availability</span>
+            </div>
+            <p class="mt-1 text-xs text-slate-300 max-w-3xl">
+              <strong>Pawan Janardhan Ghode</strong> — B.Tech IT Graduate (May 2026, YCCE Nagpur, <strong>7.90 CGPA</strong>) with enterprise training at <strong>Accenture</strong> (Advance ASE / S/4HANA Technical Architect Trainee) and <strong>UniConverge Technologies</strong> (Core Java Intern). Proven ability to build ACID-compliant payment APIs, high-concurrency locking systems, and Redis-cached microservices.
+            </p>
+          </div>
+        </div>
+        <div class="flex flex-wrap items-center gap-2">
+          <button
+            type="button"
+            onclick="copyRecruiterSummary()"
+            class="flex items-center gap-1.5 rounded-lg bg-emerald-500 px-3.5 py-2 text-xs font-semibold text-slate-950 shadow-md shadow-emerald-500/20 transition hover:bg-emerald-400"
+          >
+            <i data-lucide="copy" class="h-3.5 w-3.5"></i>
+            <span>Copy Candidate Pitch for Hiring Team</span>
+          </button>
+          <button
+            type="button"
+            onclick="openResumeModal()"
+            class="flex items-center gap-1.5 rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-xs font-medium text-white transition hover:bg-slate-800"
+          >
+            <i data-lucide="printer" class="h-3.5 w-3.5 text-cyan-400"></i>
+            <span>View / Print Full Resume</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <div class="rounded-xl border border-emerald-500/25 bg-slate-950/65 p-3">
+          <div class="font-mono text-[10px] uppercase tracking-wider text-emerald-400">Core Backend Stack</div>
+          <div class="mt-1 text-xs font-semibold text-white">Java 11/17 · Spring Boot · Microservices</div>
+          <div class="mt-0.5 text-[11px] text-slate-400">Spring Security (JWT/OAuth2), Hibernate JPA, REST APIs</div>
+        </div>
+        <div class="rounded-xl border border-cyan-500/25 bg-slate-950/65 p-3">
+          <div class="font-mono text-[10px] uppercase tracking-wider text-cyan-400">Data &amp; Event Streaming</div>
+          <div class="mt-1 text-xs font-semibold text-white">PostgreSQL · MySQL · Redis · Kafka</div>
+          <div class="mt-0.5 text-[11px] text-slate-400">-60% latency via Redis; async decoupling via Apache Kafka</div>
+        </div>
+        <div class="rounded-xl border border-indigo-500/25 bg-slate-950/65 p-3">
+          <div class="font-mono text-[10px] uppercase tracking-wider text-indigo-400">Enterprise &amp; Cloud Readiness</div>
+          <div class="mt-1 text-xs font-semibold text-white">Accenture ASE + UniConverge Intern</div>
+          <div class="mt-0.5 text-[11px] text-slate-400">Docker, AWS (EC2), SAP BTP, Git, JUnit, Swagger, 0-Downtime DB Migration</div>
+        </div>
+        <div class="rounded-xl border border-amber-500/25 bg-slate-950/65 p-3">
+          <div class="font-mono text-[10px] uppercase tracking-wider text-amber-400">Algorithms &amp; Published Research</div>
+          <div class="mt-1 text-xs font-semibold text-white">400+ LeetCode (Top 10% Global)</div>
+          <div class="mt-0.5 text-[11px] text-slate-400">Published AI Physiotherapy paper (DOI: 10.21203, 94.28% accuracy)</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Content Container -->
+  <main class="relative z-10 mx-auto max-w-7xl px-4 pb-24 pt-8 sm:px-6 lg:px-8">
+
+    <!-- HERO SECTION -->
+    <section id="hero" class="py-6 lg:py-12">
+      <div class="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:items-center">
+
+        <!-- Left Column: Bio, Headline & Recruiter CTAs -->
+        <div class="lg:col-span-7 space-y-6">
+          <div class="inline-flex flex-wrap items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3.5 py-1.5 text-xs font-medium text-emerald-300">
+            <span class="relative flex h-2 w-2">
+              <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
+              <span class="relative inline-flex h-2 w-2 rounded-full bg-emerald-500"></span>
+            </span>
+            <span>Open to Backend Software Engineering Roles</span>
+            <span class="text-slate-500">|</span>
+            <span class="font-mono text-[11px] text-cyan-300">Nagpur, India · Willing to Relocate / Remote</span>
+          </div>
+
+          <div class="space-y-3">
+            <div class="font-mono text-xs uppercase tracking-widest text-slate-400">
+              $ whoami --candidate="Pawan Janardhan Ghode"
+            </div>
+            <h1 class="text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl">
+              <span>Engineering </span>
+              <span class="bg-gradient-to-r from-emerald-400 via-cyan-400 to-indigo-400 bg-clip-text text-transparent">
+                High-Concurrency
+              </span>
+              <span> Backend Systems.</span>
+            </h1>
+            <div class="flex items-center gap-2 font-mono text-sm sm:text-base text-emerald-400 pt-1">
+              <span>&gt;</span>
+              <span id="typewriterText" class="font-semibold">Java (11/17) &amp; Spring Boot Microservices Developer</span>
+              <span class="inline-block h-4 w-2 animate-pulse bg-emerald-400"></span>
+            </div>
+          </div>
+
+          <p class="max-w-2xl text-sm sm:text-base leading-relaxed text-slate-300">
+            Backend Developer with a strong foundation in <strong class="text-white font-semibold">Java, Spring Boot, and microservices architecture</strong>. Experienced through <strong class="text-white font-semibold">Accenture</strong> pre-onboarding enterprise architecture training and <strong class="text-white font-semibold">UniConverge Technologies</strong> Core Java internship. Passionate about designing idempotent REST APIs, decoupling event streams with <strong class="text-white font-semibold">Apache Kafka</strong>, cutting read latency by <strong class="text-emerald-400 font-semibold">60% with Redis</strong>, and solving <strong class="text-cyan-300 font-semibold">400+ DSA problems</strong> on LeetCode.
+          </p>
+
+          <!-- Primary CTA Buttons -->
+          <div class="flex flex-wrap items-center gap-3 pt-1">
+            <a
+              href="#architecture"
+              class="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 px-5 py-3 text-xs sm:text-sm font-bold text-slate-950 shadow-lg shadow-emerald-500/20 transition hover:brightness-110"
+            >
+              <i data-lucide="cpu" class="h-4 w-4"></i>
+              <span>Launch Live API Architecture Sandbox</span>
+            </a>
+
+            <a
+              href="#recruiter-match"
+              class="inline-flex items-center gap-2 rounded-xl border border-emerald-500/40 bg-emerald-500/10 px-4 py-3 text-xs sm:text-sm font-semibold text-emerald-300 transition hover:bg-emerald-500/20"
+            >
+              <i data-lucide="check-circle-2" class="h-4 w-4"></i>
+              <span>Test Role &amp; JD Match</span>
+            </a>
+
+            <button
+              type="button"
+              onclick="openResumeModal()"
+              class="inline-flex items-center gap-2 rounded-xl border border-slate-700 bg-slate-900/90 px-4 py-3 text-xs sm:text-sm font-medium text-slate-200 transition hover:border-slate-500 hover:bg-slate-800"
+            >
+              <i data-lucide="file-check-2" class="h-4 w-4 text-cyan-400"></i>
+              <span>Interactive Resume</span>
+            </button>
+          </div>
+
+          <!-- Verified External Profiles Strip -->
+          <div class="pt-2">
+            <div class="text-[11px] font-mono uppercase tracking-wider text-slate-400 mb-2.5">
+              Verified Profiles &amp; Direct Links
+            </div>
+            <div class="flex flex-wrap items-center gap-2.5">
+              <a
+                href="https://github.com/Pawan-Ghode"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center gap-2 rounded-lg border border-slate-800 bg-slate-900/80 px-3 py-2 text-xs font-medium text-slate-200 transition hover:border-emerald-500/50 hover:text-emerald-300"
+              >
+                <i data-lucide="github" class="h-4 w-4 text-emerald-400"></i>
+                <span>GitHub (@Pawan-Ghode)</span>
+                <i data-lucide="external-link" class="h-3 w-3 opacity-60"></i>
+              </a>
+
+              <a
+                href="https://www.linkedin.com/in/pawan-ghode/"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center gap-2 rounded-lg border border-slate-800 bg-slate-900/80 px-3 py-2 text-xs font-medium text-slate-200 transition hover:border-cyan-500/50 hover:text-cyan-300"
+              >
+                <i data-lucide="linkedin" class="h-4 w-4 text-cyan-400"></i>
+                <span>LinkedIn</span>
+                <i data-lucide="external-link" class="h-3 w-3 opacity-60"></i>
+              </a>
+
+              <a
+                href="https://leetcode.com/u/pawan_ghode/"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center gap-2 rounded-lg border border-slate-800 bg-slate-900/80 px-3 py-2 text-xs font-medium text-slate-200 transition hover:border-amber-500/50 hover:text-amber-300"
+              >
+                <i data-lucide="code-2" class="h-4 w-4 text-amber-400"></i>
+                <span>LeetCode (400+ · Top 10%)</span>
+                <i data-lucide="external-link" class="h-3 w-3 opacity-60"></i>
+              </a>
+
+              <a
+                href="https://doi.org/10.21203/rs.3.rs-10049531/v1"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center gap-2 rounded-lg border border-slate-800 bg-slate-900/80 px-3 py-2 text-xs font-medium text-slate-200 transition hover:border-indigo-500/50 hover:text-indigo-300"
+              >
+                <i data-lucide="book-open-check" class="h-4 w-4 text-indigo-400"></i>
+                <span>Published AI Paper (DOI)</span>
+                <i data-lucide="external-link" class="h-3 w-3 opacity-60"></i>
+              </a>
+
+              <button
+                type="button"
+                onclick="copyText('pawanghode85@gmail.com', 'Email pawanghode85@gmail.com copied!')"
+                class="inline-flex items-center gap-2 rounded-lg border border-slate-800 bg-slate-900/80 px-3 py-2 text-xs font-mono text-slate-300 transition hover:border-emerald-500/50 hover:text-white"
+              >
+                <i data-lucide="mail" class="h-3.5 w-3.5 text-emerald-400"></i>
+                <span>pawanghode85@gmail.com</span>
+                <i data-lucide="copy" class="h-3 w-3 opacity-60"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Interactive Candidate Telemetry & API Inspector Card -->
+        <div class="lg:col-span-5">
+          <div class="glass-card rounded-2xl border border-slate-800/90 p-5 shadow-2xl relative overflow-hidden">
+            <!-- Top Terminal Header -->
+            <div class="flex items-center justify-between border-b border-slate-800/80 pb-3.5">
+              <div class="flex items-center gap-2">
+                <span class="h-3 w-3 rounded-full bg-rose-500/80"></span>
+                <span class="h-3 w-3 rounded-full bg-amber-500/80"></span>
+                <span class="h-3 w-3 rounded-full bg-emerald-500/80"></span>
+                <span class="ml-2 font-mono text-xs text-slate-400">GET /api/v1/engineer/pawan-ghode</span>
+              </div>
+              <span class="rounded bg-emerald-500/15 px-2 py-0.5 font-mono text-[11px] font-semibold text-emerald-400 border border-emerald-500/30">
+                200 OK · 12ms
+              </span>
+            </div>
+
+            <!-- Candidate Identity Header inside Telemetry Card -->
+            <div class="mt-4 flex items-center gap-4">
+              <div class="relative h-16 w-16 shrink-0 rounded-2xl bg-gradient-to-br from-emerald-500 via-cyan-500 to-indigo-600 p-0.5 shadow-lg">
+                <div class="flex h-full w-full items-center justify-center rounded-[14px] bg-slate-950 font-mono text-xl font-extrabold text-white">
+                  PG
+                </div>
+                <span class="absolute -bottom-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-emerald-500 text-[10px] text-slate-950 font-bold" title="Verified Graduate 2026">
+                  ✓
+                </span>
+              </div>
+              <div class="min-w-0 flex-1">
+                <h2 class="truncate text-lg font-bold text-white">Pawan Janardhan Ghode</h2>
+                <p class="text-xs text-emerald-400 font-mono">B.Tech IT @ YCCE Nagpur (CGPA: 7.90/10)</p>
+                <div class="mt-1 flex flex-wrap items-center gap-2 text-[11px] text-slate-400">
+                  <span class="inline-flex items-center gap-1"><i data-lucide="map-pin" class="h-3 w-3 text-cyan-400"></i> Nagpur, India</span>
+                  <span>•</span>
+                  <span class="inline-flex items-center gap-1"><i data-lucide="phone" class="h-3 w-3 text-emerald-400"></i> +91 9579081065</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Telemetry View Switcher Tabs -->
+            <div class="mt-4 grid grid-cols-3 gap-1.5 rounded-xl bg-slate-950/90 p-1 border border-slate-800/80">
+              <button
+                id="heroTabBtn-snapshot"
+                type="button"
+                onclick="switchHeroTab('snapshot')"
+                class="rounded-lg bg-emerald-500/20 border border-emerald-500/40 py-1.5 font-mono text-xs font-semibold text-emerald-300 transition"
+              >
+                Snapshot
+              </button>
+              <button
+                id="heroTabBtn-benchmarks"
+                type="button"
+                onclick="switchHeroTab('benchmarks')"
+                class="rounded-lg py-1.5 font-mono text-xs font-medium text-slate-400 transition hover:text-white"
+              >
+                Benchmarks
+              </button>
+              <button
+                id="heroTabBtn-json"
+                type="button"
+                onclick="switchHeroTab('json')"
+                class="rounded-lg py-1.5 font-mono text-xs font-medium text-slate-400 transition hover:text-white"
+              >
+                JSON Payload
+              </button>
+            </div>
+
+            <!-- Tab 1: Executive Snapshot -->
+            <div id="heroTabContent-snapshot" class="mt-4 space-y-3">
+              <div class="rounded-xl border border-slate-800/90 bg-slate-950/60 p-3">
+                <div class="flex items-center justify-between text-xs">
+                  <span class="font-mono text-slate-400">Latest Enterprise Role</span>
+                  <span class="font-mono text-[11px] text-emerald-400">06/2026 – 09/2026</span>
+                </div>
+                <div class="mt-1 font-semibold text-sm text-white">Pre-Onboarding Advance ASE Trainee — Accenture</div>
+                <p class="mt-0.5 text-xs text-slate-400">Distributed cloud infrastructure, SAP BTP architecture &amp; 100% consistent high-load DB migration simulation.</p>
+              </div>
+
+              <div class="rounded-xl border border-slate-800/90 bg-slate-950/60 p-3">
+                <div class="flex items-center justify-between text-xs">
+                  <span class="font-mono text-slate-400">Core Java Internship</span>
+                  <span class="font-mono text-[11px] text-cyan-400">03/2026 – 04/2026</span>
+                </div>
+                <div class="mt-1 font-semibold text-sm text-white">Core Java Intern — UniConverge Technologies</div>
+                <p class="mt-0.5 text-xs text-slate-400">Modular Banking Management System; reduced execution errors by <strong class="text-emerald-400">40%</strong> via optimized DB validation logic.</p>
+              </div>
+
+              <div class="grid grid-cols-2 gap-2.5">
+                <div class="rounded-xl border border-slate-800/90 bg-slate-950/60 p-3">
+                  <div class="font-mono text-[11px] text-slate-400">Primary Stack</div>
+                  <div class="mt-1 text-xs font-bold text-white">Java 17 · Spring Boot · Kafka · Redis</div>
+                </div>
+                <div class="rounded-xl border border-slate-800/90 bg-slate-950/60 p-3">
+                  <div class="font-mono text-[11px] text-slate-400">Problem Solving</div>
+                  <div class="mt-1 text-xs font-bold text-emerald-400">400+ LeetCode (Top 10%)</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tab 2: Engineering Benchmarks -->
+            <div id="heroTabContent-benchmarks" class="hidden mt-4 space-y-3">
+              <div>
+                <div class="flex justify-between text-xs mb-1">
+                  <span class="text-slate-300 font-medium">API Read Latency Reduction (Redis Cache)</span>
+                  <span class="font-mono font-bold text-emerald-400">-60% Latency</span>
+                </div>
+                <div class="h-2 w-full rounded-full bg-slate-800 overflow-hidden">
+                  <div class="h-full rounded-full bg-gradient-to-r from-emerald-500 to-cyan-400" style="width: 88%"></div>
+                </div>
+                <p class="mt-1 text-[11px] text-slate-400">Scalable Movie Ticketing Backend (BookMyShow Clone)</p>
+              </div>
+
+              <div>
+                <div class="flex justify-between text-xs mb-1">
+                  <span class="text-slate-300 font-medium">Runtime Error Reduction (DB Validation Logic)</span>
+                  <span class="font-mono font-bold text-cyan-400">-40% Errors</span>
+                </div>
+                <div class="h-2 w-full rounded-full bg-slate-800 overflow-hidden">
+                  <div class="h-full rounded-full bg-gradient-to-r from-cyan-500 to-indigo-400" style="width: 78%"></div>
+                </div>
+                <p class="mt-1 text-[11px] text-slate-400">Banking Management System @ UniConverge Technologies</p>
+              </div>
+
+              <div>
+                <div class="flex justify-between text-xs mb-1">
+                  <span class="text-slate-300 font-medium">High-Load Migration Data Consistency</span>
+                  <span class="font-mono font-bold text-emerald-400">100% · 0 Downtime</span>
+                </div>
+                <div class="h-2 w-full rounded-full bg-slate-800 overflow-hidden">
+                  <div class="h-full rounded-full bg-emerald-500" style="width: 100%"></div>
+                </div>
+                <p class="mt-1 text-[11px] text-slate-400">Enterprise DB Migration Simulation @ Accenture</p>
+              </div>
+
+              <div>
+                <div class="flex justify-between text-xs mb-1">
+                  <span class="text-slate-300 font-medium">Published AI Posture Model Accuracy</span>
+                  <span class="font-mono font-bold text-indigo-400">94.28% Accuracy</span>
+                </div>
+                <div class="h-2 w-full rounded-full bg-slate-800 overflow-hidden">
+                  <div class="h-full rounded-full bg-indigo-500" style="width: 94%"></div>
+                </div>
+                <p class="mt-1 text-[11px] text-slate-400">TensorFlow + MediaPipe Pose Physiotherapy Assistant</p>
+              </div>
+            </div>
+
+            <!-- Tab 3: Raw JSON Profile Payload -->
+            <div id="heroTabContent-json" class="hidden mt-4">
+              <pre class="max-h-60 overflow-y-auto rounded-xl border border-slate-800 bg-slate-950 p-3 font-mono text-[11px] leading-relaxed text-emerald-300">{
+  "candidate": "Pawan Janardhan Ghode",
+  "location": "Nagpur, Maharashtra, India",
+  "education": {
+    "degree": "B.Tech in Information Technology",
+    "college": "YCCE Nagpur",
+    "graduation": "05/2026",
+    "cgpa": 7.90
+  },
+  "coreCompetencies": [
+    "Java 11/17", "Spring Boot", "Spring Security (JWT/OAuth2)",
+    "Hibernate (JPA)", "Microservices", "Apache Kafka",
+    "PostgreSQL", "MySQL", "Redis", "Docker", "AWS EC2"
+  ],
+  "verifiedMetrics": {
+    "redisLatencyReduction": "60%",
+    "javaErrorReduction": "40%",
+    "dbMigrationConsistency": "100% (Zero Downtime)",
+    "leetcodeSolved": "400+ (Top 10% Global Contests)"
+  },
+  "contact": {
+    "email": "pawanghode85@gmail.com",
+    "phone": "+91 9579081065"
+  }
+}</pre>
+            </div>
+
+            <!-- Card Footer Status -->
+            <div class="mt-4 flex items-center justify-between border-t border-slate-800/80 pt-3 text-[11px] text-slate-400">
+              <span class="font-mono">Status: <strong class="text-emerald-400">READY_FOR_INTERVIEW</strong></span>
+              <button
+                type="button"
+                onclick="copyRecruiterSummary()"
+                class="font-mono text-cyan-400 hover:underline flex items-center gap-1"
+              >
+                <i data-lucide="clipboard-copy" class="h-3 w-3"></i>
+                <span>Copy Summary</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- QUANTIFIED IMPACT & ENGINEERING PROOF STRIP -->
+    <section id="impact" class="py-8">
+      <div class="mb-5 flex flex-col sm:flex-row sm:items-end justify-between gap-2">
+        <div>
+          <div class="font-mono text-xs text-emerald-400">$ cat metrics/verified_impact.log</div>
+          <h2 class="text-xl sm:text-2xl font-bold text-white mt-1">Quantified Engineering Impact at a Glance</h2>
+        </div>
+        <p class="text-xs text-slate-400">Every number below maps directly to a verified internship, repository, or publication on Pawan's resume.</p>
+      </div>
+
+      <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <!-- Metric 1 -->
+        <div class="glass-card recruiter-spotlight rounded-2xl p-5">
+          <div class="flex items-center justify-between">
+            <span class="rounded-lg bg-emerald-500/15 px-2.5 py-1 font-mono text-xs font-semibold text-emerald-400 border border-emerald-500/30">Performance &amp; Caching</span>
+            <i data-lucide="gauge" class="h-5 w-5 text-emerald-400"></i>
+          </div>
+          <div class="mt-3 flex items-baseline gap-2">
+            <span class="text-3xl sm:text-4xl font-extrabold text-white">60%</span>
+            <span class="text-xs font-semibold uppercase tracking-wider text-emerald-400">Faster API Response</span>
+          </div>
+          <p class="mt-2 text-xs text-slate-300 leading-relaxed">
+            Implemented <strong>Redis Caching</strong> for frequently accessed movie listings and theater layouts in the <em>Scalable Movie Ticketing Backend</em>, cutting PostgreSQL read load and improving latency by 60%.
+          </p>
+        </div>
+
+        <!-- Metric 2 -->
+        <div class="glass-card recruiter-spotlight rounded-2xl p-5">
+          <div class="flex items-center justify-between">
+            <span class="rounded-lg bg-cyan-500/15 px-2.5 py-1 font-mono text-xs font-semibold text-cyan-400 border border-cyan-500/30">Reliability &amp; Code Quality</span>
+            <i data-lucide="shield-check" class="h-5 w-5 text-cyan-400"></i>
+          </div>
+          <div class="mt-3 flex items-baseline gap-2">
+            <span class="text-3xl sm:text-4xl font-extrabold text-white">40%</span>
+            <span class="text-xs font-semibold uppercase tracking-wider text-cyan-400">Fewer Execution Errors</span>
+          </div>
+          <p class="mt-2 text-xs text-slate-300 leading-relaxed">
+            Optimized data validation and database interaction logic in a modular <strong>Core Java Banking Management System</strong> at <em>UniConverge Technologies Pvt. Ltd.</em>, improving debugging efficiency.
+          </p>
+        </div>
+
+        <!-- Metric 3 -->
+        <div class="glass-card recruiter-spotlight rounded-2xl p-5">
+          <div class="flex items-center justify-between">
+            <span class="rounded-lg bg-indigo-500/15 px-2.5 py-1 font-mono text-xs font-semibold text-indigo-400 border border-indigo-500/30">Enterprise Resilience</span>
+            <i data-lucide="database-zap" class="h-5 w-5 text-indigo-400"></i>
+          </div>
+          <div class="mt-3 flex items-baseline gap-2">
+            <span class="text-3xl sm:text-4xl font-extrabold text-white">100%</span>
+            <span class="text-xs font-semibold uppercase tracking-wider text-indigo-400">Consistency · 0 Downtime</span>
+          </div>
+          <p class="mt-2 text-xs text-slate-300 leading-relaxed">
+            Executed a high-load database migration simulation during pre-onboarding training at <strong>Accenture</strong>, monitoring transactional logs to maintain 100% data integrity with zero downtime.
+          </p>
+        </div>
+
+        <!-- Metric 4 -->
+        <div class="glass-card recruiter-spotlight rounded-2xl p-5">
+          <div class="flex items-center justify-between">
+            <span class="rounded-lg bg-amber-500/15 px-2.5 py-1 font-mono text-xs font-semibold text-amber-400 border border-amber-500/30">Data Structures &amp; Algorithms</span>
+            <i data-lucide="trophy" class="h-5 w-5 text-amber-400"></i>
+          </div>
+          <div class="mt-3 flex items-baseline gap-2">
+            <span class="text-3xl sm:text-4xl font-extrabold text-white">400+</span>
+            <span class="text-xs font-semibold uppercase tracking-wider text-amber-400">DSA Solved · Top 10% Global</span>
+          </div>
+          <p class="mt-2 text-xs text-slate-300 leading-relaxed">
+            Solved 400+ algorithmic problems on <a href="https://leetcode.com/u/pawan_ghode/" target="_blank" rel="noopener noreferrer" class="text-amber-300 underline hover:text-amber-200">LeetCode</a> and achieved a <strong>Top 10% global rank</strong> across multiple LeetCode Weekly Contests.
+          </p>
+        </div>
+
+        <!-- Metric 5 -->
+        <div class="glass-card recruiter-spotlight rounded-2xl p-5">
+          <div class="flex items-center justify-between">
+            <span class="rounded-lg bg-purple-500/15 px-2.5 py-1 font-mono text-xs font-semibold text-purple-400 border border-purple-500/30">Published AI Research</span>
+            <i data-lucide="microscope" class="h-5 w-5 text-purple-400"></i>
+          </div>
+          <div class="mt-3 flex items-baseline gap-2">
+            <span class="text-3xl sm:text-4xl font-extrabold text-white">94.28%</span>
+            <span class="text-xs font-semibold uppercase tracking-wider text-purple-400">Pose Classification Accuracy</span>
+          </div>
+          <p class="mt-2 text-xs text-slate-300 leading-relaxed">
+            Co-authored and published <a href="https://doi.org/10.21203/rs.3.rs-10049531/v1" target="_blank" rel="noopener noreferrer" class="text-purple-300 underline hover:text-purple-200">AI-Powered Smart Physiotherapy Assistant</a> using MediaPipe Pose &amp; TensorFlow Neural Networks.
+          </p>
+        </div>
+
+        <!-- Metric 6 -->
+        <div class="glass-card recruiter-spotlight rounded-2xl p-5">
+          <div class="flex items-center justify-between">
+            <span class="rounded-lg bg-teal-500/15 px-2.5 py-1 font-mono text-xs font-semibold text-teal-400 border border-teal-500/30">Academic Foundation</span>
+            <i data-lucide="graduation-cap" class="h-5 w-5 text-teal-400"></i>
+          </div>
+          <div class="mt-3 flex items-baseline gap-2">
+            <span class="text-3xl sm:text-4xl font-extrabold text-white">7.90<span class="text-lg text-slate-400">/10</span></span>
+            <span class="text-xs font-semibold uppercase tracking-wider text-teal-400">B.Tech IT CGPA (YCCE)</span>
+          </div>
+          <p class="mt-2 text-xs text-slate-300 leading-relaxed">
+            B.Tech in Information Technology at <strong>Yeshwantrao Chavan College of Engineering (YCCE), Nagpur</strong> (11/2022 – 05/2026) + regular 48-hour hackathon builder.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- INTERACTIVE RECRUITER ROLE-FIT & JD STACK MATCHER -->
+    <section id="recruiter-match" class="py-10">
+      <div class="glass-card rounded-3xl border border-emerald-500/30 p-6 sm:p-8 shadow-2xl">
+        <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 border-b border-slate-800/80 pb-6">
+          <div>
+            <div class="inline-flex items-center gap-2 rounded-full bg-emerald-500/15 px-3 py-1 font-mono text-xs font-semibold text-emerald-400 border border-emerald-500/30">
+              <i data-lucide="scan-search" class="h-3.5 w-3.5"></i>
+              <span>Interactive Recruiter Tool</span>
+            </div>
+            <h2 class="mt-2 text-2xl sm:text-3xl font-bold text-white">Role-Fit &amp; Job Requirement Matcher</h2>
+            <p class="mt-1 text-xs sm:text-sm text-slate-300">
+              Select a target engineering role preset or toggle the exact skills from your Job Description to verify Pawan's hands-on project and internship evidence.
+            </p>
+          </div>
+
+          <!-- Live Compatibility Score Readout -->
+          <div class="flex items-center gap-4 rounded-2xl border border-emerald-500/30 bg-slate-950/80 px-5 py-3.5 shrink-0">
+            <div>
+              <div class="font-mono text-[11px] uppercase tracking-wider text-slate-400">Stack Coverage</div>
+              <div id="matchScoreReadout" class="text-3xl font-extrabold text-emerald-400">100%</div>
+              <div id="matchCountReadout" class="font-mono text-[11px] text-slate-300">8 / 8 core requirements verified</div>
+            </div>
+            <div class="h-12 w-12 rounded-xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400">
+              <i data-lucide="badge-check" class="h-7 w-7"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- Role Presets -->
+        <div class="mt-6">
+          <div class="text-xs font-mono uppercase tracking-wider text-slate-400 mb-2.5">
+            1. Select a Hiring Role Preset (or customize skills below):
+          </div>
+          <div class="flex flex-wrap gap-2">
+            <button
+              type="button"
+              id="presetBtn-java-microservices"
+              onclick="selectRolePreset('java-microservices')"
+              class="rounded-xl border border-emerald-500 bg-emerald-500/20 px-3.5 py-2 text-xs font-semibold text-emerald-300 transition"
+            >
+              Java &amp; Spring Boot Microservices SDE
+            </button>
+            <button
+              type="button"
+              id="presetBtn-high-concurrency"
+              onclick="selectRolePreset('high-concurrency')"
+              class="rounded-xl border border-slate-700 bg-slate-900/80 px-3.5 py-2 text-xs font-medium text-slate-300 transition hover:border-slate-500"
+            >
+              High-Concurrency &amp; Caching Backend Engineer
+            </button>
+            <button
+              type="button"
+              id="presetBtn-fintech-acid"
+              onclick="selectRolePreset('fintech-acid')"
+              class="rounded-xl border border-slate-700 bg-slate-900/80 px-3.5 py-2 text-xs font-medium text-slate-300 transition hover:border-slate-500"
+            >
+              Fintech / Event-Driven API Engineer
+            </button>
+            <button
+              type="button"
+              id="presetBtn-cloud-enterprise"
+              onclick="selectRolePreset('cloud-enterprise')"
+              class="rounded-xl border border-slate-700 bg-slate-900/80 px-3.5 py-2 text-xs font-medium text-slate-300 transition hover:border-slate-500"
+            >
+              Enterprise Cloud &amp; Database Migration
+            </button>
+            <button
+              type="button"
+              id="presetBtn-all"
+              onclick="selectRolePreset('all')"
+              class="rounded-xl border border-slate-700 bg-slate-900/80 px-3.5 py-2 text-xs font-medium text-slate-300 transition hover:border-slate-500"
+            >
+              Select All 20 Skills
+            </button>
+          </div>
+        </div>
+
+        <!-- Interactive Skill Chips Grid -->
+        <div class="mt-6">
+          <div class="text-xs font-mono uppercase tracking-wider text-slate-400 mb-2.5">
+            2. Toggle Required Job Description Skills to Filter Proof:
+          </div>
+          <div id="matcherSkillPills" class="flex flex-wrap gap-2"></div>
+        </div>
+
+        <!-- Matched Proof Output -->
+        <div class="mt-6">
+          <div class="flex items-center justify-between mb-3">
+            <div class="text-xs font-mono uppercase tracking-wider text-emerald-400">
+              3. Verified Evidence from Pawan's Resume &amp; Repositories:
+            </div>
+            <span id="matchedEvidenceCount" class="font-mono text-xs text-slate-400">Showing matched experience &amp; project proof</span>
+          </div>
+          <div id="matcherEvidenceGrid" class="grid grid-cols-1 gap-3 md:grid-cols-2"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- INTERACTIVE SYSTEM ARCHITECTURE & LIVE API SIMULATOR SANDBOX -->
+    <section id="architecture" class="py-10">
+      <div class="mb-6 flex flex-col lg:flex-row lg:items-end justify-between gap-4">
+        <div>
+          <div class="font-mono text-xs text-cyan-400">$ ./simulate_architecture.sh --interactive</div>
+          <h2 class="text-2xl sm:text-3xl font-bold text-white mt-1">Interactive Backend Architecture &amp; Request Flow Sandbox</h2>
+          <p class="text-xs sm:text-sm text-slate-300 mt-1 max-w-3xl">
+            Unlike frontend portfolios, backend engineering lives under the hood. Select any of Pawan's three backend systems below and trigger a live simulated API call to inspect his concurrency locking, idempotency, caching, and Kafka event decoupling.
+          </p>
+        </div>
+
+        <!-- System Selector Buttons -->
+        <div class="flex flex-wrap gap-2">
+          <button
+            type="button"
+            id="archTab-fintech"
+            onclick="selectArchProject('fintech')"
+            class="rounded-xl border border-emerald-500 bg-emerald-500/20 px-4 py-2 text-xs font-bold text-emerald-300 transition"
+          >
+            1. Fintech Payment API (Kafka + ACID)
+          </button>
+          <button
+            type="button"
+            id="archTab-ticketing"
+            onclick="selectArchProject('ticketing')"
+            class="rounded-xl border border-slate-700 bg-slate-900 px-4 py-2 text-xs font-semibold text-slate-300 transition hover:border-slate-500"
+          >
+            2. Movie Ticketing (Redis + DB Locks)
+          </button>
+          <button
+            type="button"
+            id="archTab-expense"
+            onclick="selectArchProject('expense')"
+            class="rounded-xl border border-slate-700 bg-slate-900 px-4 py-2 text-xs font-semibold text-slate-300 transition hover:border-slate-500"
+          >
+            3. Expense Analytics (JWT + Hibernate)
+          </button>
+        </div>
+      </div>
+
+      <div class="glass-card rounded-3xl border border-slate-800 p-6 sm:p-8">
+        <!-- Top Simulation Controls Bar -->
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-slate-800/80 pb-5">
+          <div>
+            <div class="flex items-center gap-2.5">
+              <h3 id="archProjectTitle" class="text-lg sm:text-xl font-bold text-white">Fintech Payment Processing API</h3>
+              <a
+                id="archRepoLink"
+                href="https://github.com/Pawan-Ghode/Fintech-Payment-Processing-API"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center gap-1 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-1 font-mono text-[11px] text-emerald-300 hover:bg-emerald-500/20"
+              >
+                <i data-lucide="github" class="h-3.5 w-3.5"></i>
+                <span>View Repo</span>
+                <i data-lucide="external-link" class="h-3 w-3"></i>
+              </a>
+            </div>
+            <p id="archProjectSubtitle" class="text-xs text-slate-400 mt-1">
+              Spring Boot · MySQL (ACID Transactions) · Apache Kafka Broker · Idempotent REST Endpoints
+            </p>
+          </div>
+
+          <!-- Scenario Selector & Run Trace Button -->
+          <div class="flex flex-wrap items-center gap-2">
+            <label for="simScenarioSelect" class="font-mono text-xs text-slate-400">Scenario:</label>
+            <select
+              id="simScenarioSelect"
+              onchange="changeSimScenario(this.value)"
+              class="rounded-xl border border-slate-700 bg-slate-900 px-3 py-2 font-mono text-xs text-white focus:border-emerald-500 focus:outline-none"
+            ></select>
+
+            <button
+              type="button"
+              onclick="runArchitectureTrace()"
+              class="inline-flex items-center gap-2 rounded-xl bg-emerald-500 px-4 py-2 text-xs font-bold text-slate-950 shadow-md shadow-emerald-500/20 transition hover:bg-emerald-400"
+            >
+              <i data-lucide="play" class="h-3.5 w-3.5 fill-current"></i>
+              <span>Simulate Request Flow</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Interactive SVG Architecture Blueprint -->
+        <div class="mt-6">
+          <div class="mb-2 flex items-center justify-between text-xs font-mono text-slate-400">
+            <span>SYSTEM ARCHITECTURE PIPELINE (CLICK ANY NODE OR "SIMULATE REQUEST FLOW")</span>
+            <span id="archActiveStepBadge" class="text-emerald-400 font-semibold">Ready · All Nodes Healthy</span>
+          </div>
+
+          <div id="archDiagramContainer" class="grid grid-cols-1 gap-3 sm:grid-cols-5 items-stretch"></div>
+        </div>
+
+        <!-- Bottom Split: Live Request/Event Trace Console & Response Payload -->
+        <div class="mt-6 grid grid-cols-1 gap-5 lg:grid-cols-12">
+          <!-- Execution Trace Log -->
+          <div class="lg:col-span-7 rounded-2xl border border-slate-800 bg-slate-950 p-4">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-2.5 mb-3">
+              <div class="flex items-center gap-2 font-mono text-xs text-cyan-400">
+                <i data-lucide="activity" class="h-4 w-4"></i>
+                <span>LIVE EXECUTION TRACE LOG</span>
+              </div>
+              <span id="traceLatencyBadge" class="rounded bg-emerald-500/15 px-2 py-0.5 font-mono text-[11px] text-emerald-400">Total Latency: 24ms</span>
+            </div>
+            <div id="archTraceStepsList" class="space-y-2.5 text-xs font-mono"></div>
+          </div>
+
+          <!-- Simulated HTTP Request / Response Inspector -->
+          <div class="lg:col-span-5 rounded-2xl border border-slate-800 bg-slate-950 p-4 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between border-b border-slate-800 pb-2.5 mb-3">
+                <span class="font-mono text-xs text-emerald-400">HTTP / EVENT PAYLOAD INSPECTOR</span>
+                <span id="httpStatusBadge" class="rounded bg-emerald-500/20 px-2 py-0.5 font-mono text-[11px] font-bold text-emerald-300">200 OK</span>
+              </div>
+              <pre id="archPayloadPre" class="overflow-x-auto font-mono text-[11px] leading-relaxed text-slate-300"></pre>
+            </div>
+            <div id="archEngineeringTakeaway" class="mt-4 rounded-xl border border-emerald-500/25 bg-emerald-500/10 p-3 text-xs text-emerald-200"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FEATURED BACKEND PROJECTS SECTION -->
+    <section id="projects" class="py-10">
+      <div class="mb-6 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+        <div>
+          <div class="font-mono text-xs text-emerald-400">$ git log --projects --verified</div>
+          <h2 class="text-2xl sm:text-3xl font-bold text-white mt-1">Production-Grade Backend Projects</h2>
+          <p class="text-xs sm:text-sm text-slate-300 mt-1">
+            Built with clean modular OOP principles, strict ACID guarantees, concurrency locking, and containerized deployment.
+          </p>
+        </div>
+
+        <!-- Project Stack Filter -->
+        <div class="flex flex-wrap gap-1.5">
+          <button
+            type="button"
+            id="projFilter-all"
+            onclick="filterProjects('all')"
+            class="rounded-lg border border-emerald-500 bg-emerald-500/20 px-3 py-1.5 font-mono text-xs font-semibold text-emerald-300 transition"
+          >
+            All (3)
+          </button>
+          <button
+            type="button"
+            id="projFilter-kafka-redis"
+            onclick="filterProjects('kafka-redis')"
+            class="rounded-lg border border-slate-700 bg-slate-900 px-3 py-1.5 font-mono text-xs text-slate-300 transition hover:border-slate-500"
+          >
+            Kafka &amp; Redis
+          </button>
+          <button
+            type="button"
+            id="projFilter-security-jwt"
+            onclick="filterProjects('security-jwt')"
+            class="rounded-lg border border-slate-700 bg-slate-900 px-3 py-1.5 font-mono text-xs text-slate-300 transition hover:border-slate-500"
+          >
+            Spring Security &amp; JWT
+          </button>
+        </div>
+      </div>
+
+      <div id="projectsGrid" class="grid grid-cols-1 gap-6 lg:grid-cols-3">
+        <!-- Project 1: Fintech Payment Processing API -->
+        <article data-tags="all kafka-redis" class="project-card glass-card recruiter-spotlight rounded-2xl p-6 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between gap-2">
+              <span class="rounded-full bg-emerald-500/15 px-3 py-1 font-mono text-[11px] font-semibold text-emerald-400 border border-emerald-500/30">
+                Event-Driven · ACID Transactions
+              </span>
+              <a
+                href="https://github.com/Pawan-Ghode/Fintech-Payment-Processing-API"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center gap-1 font-mono text-xs text-slate-300 hover:text-emerald-400"
+                title="Open GitHub Repository"
+              >
+                <i data-lucide="github" class="h-4 w-4"></i>
+                <span>Repo</span>
+                <i data-lucide="arrow-up-right" class="h-3.5 w-3.5"></i>
+              </a>
+            </div>
+
+            <h3 class="mt-4 text-xl font-bold text-white">Fintech Payment Processing API</h3>
+            <p class="mt-1 font-mono text-xs text-cyan-400">Spring Boot · MySQL · Apache Kafka · REST API</p>
+
+            <ul class="mt-4 space-y-2.5 text-xs sm:text-sm text-slate-300">
+              <li class="flex items-start gap-2">
+                <span class="mt-1.5 h-1.5 w-1.5 rounded-full bg-emerald-400 shrink-0"></span>
+                <span>Developed a robust payment gateway simulation utilizing <strong>Spring Boot</strong> to process simulated transactions with strict adherence to <strong>ACID properties</strong>.</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="mt-1.5 h-1.5 w-1.5 rounded-full bg-emerald-400 shrink-0"></span>
+                <span>Integrated <strong>Apache Kafka</strong> as a message broker to asynchronously handle payment notifications and invoice generation, decoupling the core transaction service.</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="mt-1.5 h-1.5 w-1.5 rounded-full bg-emerald-400 shrink-0"></span>
+                <span>Designed <strong>idempotent REST endpoints</strong> to ensure safe retries during network failures, preventing duplicate fund deductions.</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="mt-6 pt-4 border-t border-slate-800/80 flex items-center justify-between gap-2">
+            <a
+              href="#architecture"
+              onclick="selectArchProject('fintech')"
+              class="inline-flex items-center gap-1.5 font-mono text-xs font-semibold text-emerald-400 hover:text-emerald-300"
+            >
+              <i data-lucide="cpu" class="h-3.5 w-3.5"></i>
+              <span>Simulate Idempotent Flow</span>
+            </a>
+            <a
+              href="https://github.com/Pawan-Ghode/Fintech-Payment-Processing-API"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="rounded-lg border border-slate-700 bg-slate-900 px-3 py-1.5 font-mono text-xs text-white hover:border-emerald-500/50"
+            >
+              GitHub Source ↗
+            </a>
+          </div>
+        </article>
+
+        <!-- Project 2: Scalable Movie Ticketing Backend -->
+        <article data-tags="all kafka-redis security-jwt" class="project-card glass-card recruiter-spotlight rounded-2xl p-6 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between gap-2">
+              <span class="rounded-full bg-cyan-500/15 px-3 py-1 font-mono text-[11px] font-semibold text-cyan-400 border border-cyan-500/30">
+                -60% Latency · Concurrency Locking
+              </span>
+              <a
+                href="https://github.com/Pawan-Ghode/Scalable-Movie-Ticketing-Backend"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center gap-1 font-mono text-xs text-slate-300 hover:text-cyan-400"
+                title="Open GitHub Repository"
+              >
+                <i data-lucide="github" class="h-4 w-4"></i>
+                <span>Repo</span>
+                <i data-lucide="arrow-up-right" class="h-3.5 w-3.5"></i>
+              </a>
+            </div>
+
+            <h3 class="mt-4 text-xl font-bold text-white">Scalable Movie Ticketing Backend (BookMyShow Clone)</h3>
+            <p class="mt-1 font-mono text-xs text-cyan-400">Java · Spring Boot · PostgreSQL · Redis · Docker · JWT</p>
+
+            <ul class="mt-4 space-y-2.5 text-xs sm:text-sm text-slate-300">
+              <li class="flex items-start gap-2">
+                <span class="mt-1.5 h-1.5 w-1.5 rounded-full bg-cyan-400 shrink-0"></span>
+                <span>Architected a highly concurrent ticketing API handling multiple simultaneous booking requests using <strong>DB pessimistic/optimistic locking</strong> to prevent double-booking.</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="mt-1.5 h-1.5 w-1.5 rounded-full bg-cyan-400 shrink-0"></span>
+                <span>Implemented <strong>Redis Caching</strong> for frequently accessed data (movie listings and theater layouts), reducing database read load and <strong>improving API response time by 60%</strong>.</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="mt-1.5 h-1.5 w-1.5 rounded-full bg-cyan-400 shrink-0"></span>
+                <span>Containerized the application using <strong>Docker</strong> for consistent cross-environment deployment and integrated <strong>Spring Security with JWT</strong> for secure user sessions.</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="mt-6 pt-4 border-t border-slate-800/80 flex items-center justify-between gap-2">
+            <a
+              href="#architecture"
+              onclick="selectArchProject('ticketing')"
+              class="inline-flex items-center gap-1.5 font-mono text-xs font-semibold text-cyan-400 hover:text-cyan-300"
+            >
+              <i data-lucide="cpu" class="h-3.5 w-3.5"></i>
+              <span>Simulate Seat Lock &amp; Redis</span>
+            </a>
+            <a
+              href="https://github.com/Pawan-Ghode/Scalable-Movie-Ticketing-Backend"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="rounded-lg border border-slate-700 bg-slate-900 px-3 py-1.5 font-mono text-xs text-white hover:border-cyan-500/50"
+            >
+              GitHub Source ↗
+            </a>
+          </div>
+        </article>
+
+        <!-- Project 3: Smart Expense Analytics & Budget Backend -->
+        <article data-tags="all security-jwt" class="project-card glass-card recruiter-spotlight rounded-2xl p-6 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between gap-2">
+              <span class="rounded-full bg-indigo-500/15 px-3 py-1 font-mono text-[11px] font-semibold text-indigo-400 border border-indigo-500/30">
+                Stateless JWT · SQL Analytics
+              </span>
+              <a
+                href="https://github.com/Pawan-Ghode"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center gap-1 font-mono text-xs text-slate-300 hover:text-indigo-400"
+                title="Open GitHub Profile"
+              >
+                <i data-lucide="github" class="h-4 w-4"></i>
+                <span>GitHub</span>
+                <i data-lucide="arrow-up-right" class="h-3.5 w-3.5"></i>
+              </a>
+            </div>
+
+            <h3 class="mt-4 text-xl font-bold text-white">Smart Expense Analytics &amp; Budget Backend</h3>
+            <p class="mt-1 font-mono text-xs text-indigo-400">Java · Spring Boot · Hibernate (JPA) · MySQL · JWT</p>
+
+            <ul class="mt-4 space-y-2.5 text-xs sm:text-sm text-slate-300">
+              <li class="flex items-start gap-2">
+                <span class="mt-1.5 h-1.5 w-1.5 rounded-full bg-indigo-400 shrink-0"></span>
+                <span>Implemented stateless user authentication and role protection using <strong>Spring Security &amp; JWT</strong> across all protected financial endpoints.</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="mt-1.5 h-1.5 w-1.5 rounded-full bg-indigo-400 shrink-0"></span>
+                <span>Optimized complex <strong>SQL aggregation queries</strong> powering automated budget threshold alerts and monthly category spending breakdowns.</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="mt-1.5 h-1.5 w-1.5 rounded-full bg-indigo-400 shrink-0"></span>
+                <span>Modeled normalized expense and category entity relationships with <strong>Hibernate (JPA)</strong> for clean, maintainable persistence.</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="mt-6 pt-4 border-t border-slate-800/80 flex items-center justify-between gap-2">
+            <a
+              href="#architecture"
+              onclick="selectArchProject('expense')"
+              class="inline-flex items-center gap-1.5 font-mono text-xs font-semibold text-indigo-400 hover:text-indigo-300"
+            >
+              <i data-lucide="cpu" class="h-3.5 w-3.5"></i>
+              <span>Simulate JWT &amp; SQL Flow</span>
+            </a>
+            <a
+              href="https://github.com/Pawan-Ghode"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="rounded-lg border border-slate-700 bg-slate-900 px-3 py-1.5 font-mono text-xs text-white hover:border-indigo-500/50"
+            >
+              GitHub Profile ↗
+            </a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- INTERNSHIPS, PRE-ONBOARDING TRAINING & EDUCATION TIMELINE -->
+    <section id="experience" class="py-10">
+      <div class="mb-6 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+        <div>
+          <div class="font-mono text-xs text-emerald-400">$ cat experience_and_education.md</div>
+          <h2 class="text-2xl sm:text-3xl font-bold text-white mt-1">Enterprise Experience, Internships &amp; Education</h2>
+        </div>
+        <div class="flex flex-wrap gap-1.5">
+          <button
+            type="button"
+            id="expTab-all"
+            onclick="filterExperience('all')"
+            class="rounded-lg border border-emerald-500 bg-emerald-500/20 px-3 py-1.5 font-mono text-xs font-semibold text-emerald-300 transition"
+          >
+            Complete Timeline
+          </button>
+          <button
+            type="button"
+            id="expTab-work"
+            onclick="filterExperience('work')"
+            class="rounded-lg border border-slate-700 bg-slate-900 px-3 py-1.5 font-mono text-xs text-slate-300 transition hover:border-slate-500"
+          >
+            Internships &amp; Enterprise Training (2)
+          </button>
+          <button
+            type="button"
+            id="expTab-edu"
+            onclick="filterExperience('edu')"
+            class="rounded-lg border border-slate-700 bg-slate-900 px-3 py-1.5 font-mono text-xs text-slate-300 transition hover:border-slate-500"
+          >
+            Education (B.Tech IT)
+          </button>
+        </div>
+      </div>
+
+      <div class="space-y-5">
+        <!-- Experience 1: Accenture -->
+        <div data-exp-type="work" class="exp-card glass-card recruiter-spotlight rounded-2xl p-6">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800/80 pb-4">
+            <div>
+              <div class="flex flex-wrap items-center gap-2">
+                <h3 class="text-lg sm:text-xl font-bold text-white">Pre-Onboarding Advance ASE Trainee</h3>
+                <span class="rounded-md bg-emerald-500/15 px-2.5 py-0.5 font-mono text-[11px] font-semibold text-emerald-300 border border-emerald-500/30">
+                  Trainee S/4HANA Technical Architect Track
+                </span>
+              </div>
+              <div class="mt-1 flex items-center gap-2 text-sm font-semibold text-cyan-400">
+                <span>Accenture</span>
+                <span class="text-slate-600">•</span>
+                <span class="text-xs font-normal text-slate-400">Nagpur, India</span>
+              </div>
+            </div>
+            <div class="font-mono text-xs font-semibold text-emerald-400 bg-slate-950/80 px-3 py-1.5 rounded-lg border border-slate-800 shrink-0">
+              06/2026 – 09/2026
+            </div>
+          </div>
+
+          <ul class="mt-4 space-y-2.5 text-xs sm:text-sm text-slate-300">
+            <li class="flex items-start gap-2.5">
+              <i data-lucide="check" class="h-4 w-4 text-emerald-400 shrink-0 mt-0.5"></i>
+              <span>Engineered distributed cloud infrastructure configurations and enterprise system architecture integrations (utilizing <strong>SAP BTP / Business Technology Platform</strong>) to support scalable enterprise-level workloads.</span>
+            </li>
+            <li class="flex items-start gap-2.5">
+              <i data-lucide="check" class="h-4 w-4 text-emerald-400 shrink-0 mt-0.5"></i>
+              <span>Executed a high-load database migration simulation (Capstone), monitoring transactional logs to ensure <strong class="text-emerald-300">100% data consistency with zero downtime</strong> during high-load transitions.</span>
+            </li>
+            <li class="flex items-start gap-2.5">
+              <i data-lucide="check" class="h-4 w-4 text-emerald-400 shrink-0 mt-0.5"></i>
+              <span>Modeled and optimized backend data pipeline architectures, streamlining enterprise application workflows for high-concurrency demands.</span>
+            </li>
+          </ul>
+
+          <div class="mt-4 flex flex-wrap gap-1.5 pt-2">
+            <span class="rounded bg-slate-900 px-2.5 py-1 font-mono text-[11px] text-slate-300 border border-slate-800">Distributed Cloud Architecture</span>
+            <span class="rounded bg-slate-900 px-2.5 py-1 font-mono text-[11px] text-slate-300 border border-slate-800">Zero-Downtime DB Migration</span>
+            <span class="rounded bg-slate-900 px-2.5 py-1 font-mono text-[11px] text-slate-300 border border-slate-800">SAP BTP</span>
+            <span class="rounded bg-slate-900 px-2.5 py-1 font-mono text-[11px] text-slate-300 border border-slate-800">High-Concurrency Pipelines</span>
+          </div>
+        </div>
+
+        <!-- Experience 2: UniConverge Technologies -->
+        <div data-exp-type="work" class="exp-card glass-card recruiter-spotlight rounded-2xl p-6">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800/80 pb-4">
+            <div>
+              <h3 class="text-lg sm:text-xl font-bold text-white">Core Java Intern</h3>
+              <div class="mt-1 flex items-center gap-2 text-sm font-semibold text-cyan-400">
+                <span>UniConverge Technologies Pvt. Ltd.</span>
+                <span class="text-slate-600">•</span>
+                <span class="text-xs font-normal text-slate-400">Remote, India</span>
+              </div>
+            </div>
+            <div class="font-mono text-xs font-semibold text-cyan-400 bg-slate-950/80 px-3 py-1.5 rounded-lg border border-slate-800 shrink-0">
+              03/2026 – 04/2026
+            </div>
+          </div>
+
+          <ul class="mt-4 space-y-2.5 text-xs sm:text-sm text-slate-300">
+            <li class="flex items-start gap-2.5">
+              <i data-lucide="check" class="h-4 w-4 text-cyan-400 shrink-0 mt-0.5"></i>
+              <span>Engineered a secure <strong>Banking Management System</strong> using Core Java, implementing modular object-oriented architecture (OOP) for scalable transaction processing.</span>
+            </li>
+            <li class="flex items-start gap-2.5">
+              <i data-lucide="check" class="h-4 w-4 text-cyan-400 shrink-0 mt-0.5"></i>
+              <span>Optimized data validation and database interaction logic, <strong class="text-cyan-300">reducing application execution errors by 40%</strong> and improving overall debugging efficiency.</span>
+            </li>
+          </ul>
+
+          <div class="mt-4 flex flex-wrap gap-1.5 pt-2">
+            <span class="rounded bg-slate-900 px-2.5 py-1 font-mono text-[11px] text-slate-300 border border-slate-800">Core Java (11/17)</span>
+            <span class="rounded bg-slate-900 px-2.5 py-1 font-mono text-[11px] text-slate-300 border border-slate-800">Modular OOP Architecture</span>
+            <span class="rounded bg-slate-900 px-2.5 py-1 font-mono text-[11px] text-slate-300 border border-slate-800">SQL &amp; JDBC Validation</span>
+            <span class="rounded bg-slate-900 px-2.5 py-1 font-mono text-[11px] text-slate-300 border border-slate-800">Banking Transaction Processing</span>
+          </div>
+        </div>
+
+        <!-- Education: YCCE Nagpur -->
+        <div data-exp-type="edu" class="exp-card glass-card recruiter-spotlight rounded-2xl p-6">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800/80 pb-4">
+            <div>
+              <div class="flex flex-wrap items-center gap-2">
+                <h3 class="text-lg sm:text-xl font-bold text-white">Bachelor of Technology (B.Tech) in Information Technology</h3>
+                <span class="rounded-md bg-teal-500/15 px-2.5 py-0.5 font-mono text-xs font-bold text-teal-300 border border-teal-500/30">
+                  CGPA: 7.90 / 10
+                </span>
+              </div>
+              <div class="mt-1 flex items-center gap-2 text-sm font-semibold text-teal-400">
+                <span>Yeshwantrao Chavan College of Engineering (YCCE)</span>
+                <span class="text-slate-600">•</span>
+                <span class="text-xs font-normal text-slate-400">Nagpur, Maharashtra, India</span>
+              </div>
+            </div>
+            <div class="font-mono text-xs font-semibold text-teal-400 bg-slate-950/80 px-3 py-1.5 rounded-lg border border-slate-800 shrink-0">
+              11/2022 – 05/2026
+            </div>
+          </div>
+
+          <p class="mt-4 text-xs sm:text-sm text-slate-300">
+            Strong academic track record in Data Structures &amp; Algorithms, Object-Oriented Programming, Database Management Systems, Operating Systems, Computer Networks, and System Design, complemented by published AI research and competitive programming.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CATEGORIZED TECHNICAL SKILLS DIRECTORY -->
+    <section id="skills" class="py-10">
+      <div class="mb-6 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+        <div>
+          <div class="font-mono text-xs text-emerald-400">$ ls -la skills/ --categories=5 --total=20</div>
+          <h2 class="text-2xl sm:text-3xl font-bold text-white mt-1">Technical Skills &amp; Engineering Stack</h2>
+        </div>
+        <div class="relative w-full sm:w-72">
+          <input
+            id="skillSearchInput"
+            type="text"
+            oninput="filterSkillCards(this.value)"
+            placeholder="Filter skills (e.g. Kafka, Redis, JWT)..."
+            class="w-full rounded-xl border border-slate-700 bg-slate-900/90 py-2 pl-9 pr-3 font-mono text-xs text-white placeholder-slate-500 focus:border-emerald-500 focus:outline-none"
+          />
+          <i data-lucide="search" class="absolute left-3 top-2.5 h-4 w-4 text-slate-500"></i>
+        </div>
+      </div>
+
+      <div id="skillsDirectoryGrid" class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <!-- Category 1: Languages -->
+        <div class="skill-category-card glass-card rounded-2xl p-5" data-skill-keywords="java 11 17 sql python languages">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <span class="font-mono text-xs font-bold uppercase tracking-wider text-emerald-400">01 / Languages</span>
+            <i data-lucide="terminal-square" class="h-4 w-4 text-emerald-400"></i>
+          </div>
+          <div class="mt-4 flex flex-wrap gap-2">
+            <span class="rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3 py-1.5 font-mono text-xs font-semibold text-emerald-300">Java (11 / 17)</span>
+            <span class="rounded-lg border border-slate-700 bg-slate-900 px-3 py-1.5 font-mono text-xs text-slate-200">SQL</span>
+            <span class="rounded-lg border border-slate-700 bg-slate-900 px-3 py-1.5 font-mono text-xs text-slate-200">Python</span>
+          </div>
+          <p class="mt-3 text-[11px] text-slate-400">Primary language: Java for high-concurrency backend systems &amp; 400+ LeetCode solutions.</p>
+        </div>
+
+        <!-- Category 2: Backend & Frameworks -->
+        <div class="skill-category-card glass-card rounded-2xl p-5" data-skill-keywords="spring boot spring security jwt oauth2 hibernate jpa microservices oop principles">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <span class="font-mono text-xs font-bold uppercase tracking-wider text-cyan-400">02 / Backend &amp; Frameworks</span>
+            <i data-lucide="server" class="h-4 w-4 text-cyan-400"></i>
+          </div>
+          <div class="mt-4 flex flex-wrap gap-2">
+            <span class="rounded-lg border border-cyan-500/30 bg-cyan-500/10 px-3 py-1.5 font-mono text-xs font-semibold text-cyan-300">Spring Boot</span>
+            <span class="rounded-lg border border-cyan-500/30 bg-cyan-500/10 px-3 py-1.5 font-mono text-xs font-semibold text-cyan-300">Spring Security (JWT, OAuth2)</span>
+            <span class="rounded-lg border border-slate-700 bg-slate-900 px-3 py-1.5 font-mono text-xs text-slate-200">Hibernate (JPA)</span>
+            <span class="rounded-lg border border-slate-700 bg-slate-900 px-3 py-1.5 font-mono text-xs text-slate-200">Microservices</span>
+            <span class="rounded-lg border border-slate-700 bg-slate-900 px-3 py-1.5 font-mono text-xs text-slate-200">OOP Principles</span>
+          </div>
+          <p class="mt-3 text-[11px] text-slate-400">Stateless authentication, ORM entity modeling, and modular service boundaries.</p>
+        </div>
+
+        <!-- Category 3: Databases & Caching -->
+        <div class="skill-category-card glass-card rounded-2xl p-5" data-skill-keywords="postgresql mysql redis databases caching acid locking">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <span class="font-mono text-xs font-bold uppercase tracking-wider text-indigo-400">03 / Databases &amp; Caching</span>
+            <i data-lucide="database" class="h-4 w-4 text-indigo-400"></i>
+          </div>
+          <div class="mt-4 flex flex-wrap gap-2">
+            <span class="rounded-lg border border-indigo-500/30 bg-indigo-500/10 px-3 py-1.5 font-mono text-xs font-semibold text-indigo-300">PostgreSQL</span>
+            <span class="rounded-lg border border-indigo-500/30 bg-indigo-500/10 px-3 py-1.5 font-mono text-xs font-semibold text-indigo-300">MySQL</span>
+            <span class="rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3 py-1.5 font-mono text-xs font-semibold text-emerald-300">Redis (Caching)</span>
+          </div>
+          <p class="mt-3 text-[11px] text-slate-400">Pessimistic/optimistic row locking, ACID compliance, query optimization &amp; low-latency caching.</p>
+        </div>
+
+        <!-- Category 4: Architecture & Messaging -->
+        <div class="skill-category-card glass-card rounded-2xl p-5" data-skill-keywords="rest api design apache kafka mvc pattern system design hld sap btp">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <span class="font-mono text-xs font-bold uppercase tracking-wider text-amber-400">04 / Architecture &amp; Messaging</span>
+            <i data-lucide="network" class="h-4 w-4 text-amber-400"></i>
+          </div>
+          <div class="mt-4 flex flex-wrap gap-2">
+            <span class="rounded-lg border border-amber-500/30 bg-amber-500/10 px-3 py-1.5 font-mono text-xs font-semibold text-amber-300">Apache Kafka</span>
+            <span class="rounded-lg border border-amber-500/30 bg-amber-500/10 px-3 py-1.5 font-mono text-xs font-semibold text-amber-300">REST API Design</span>
+            <span class="rounded-lg border border-slate-700 bg-slate-900 px-3 py-1.5 font-mono text-xs text-slate-200">System Design (HLD)</span>
+            <span class="rounded-lg border border-slate-700 bg-slate-900 px-3 py-1.5 font-mono text-xs text-slate-200">MVC Pattern</span>
+            <span class="rounded-lg border border-slate-700 bg-slate-900 px-3 py-1.5 font-mono text-xs text-slate-200">SAP BTP</span>
+          </div>
+          <p class="mt-3 text-[11px] text-slate-400">Idempotent endpoints, event-driven pub/sub decoupling, and enterprise cloud integration.</p>
+        </div>
+
+        <!-- Category 5: Tools, Testing & Deployment -->
+        <div class="skill-category-card glass-card rounded-2xl p-5 md:col-span-2" data-skill-keywords="git docker postman aws ec2 junit swagger tools deployment">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <span class="font-mono text-xs font-bold uppercase tracking-wider text-teal-400">05 / DevOps, Testing &amp; Cloud Tooling</span>
+            <i data-lucide="boxes" class="h-4 w-4 text-teal-400"></i>
+          </div>
+          <div class="mt-4 flex flex-wrap gap-2">
+            <span class="rounded-lg border border-teal-500/30 bg-teal-500/10 px-3 py-1.5 font-mono text-xs font-semibold text-teal-300">Docker</span>
+            <span class="rounded-lg border border-teal-500/30 bg-teal-500/10 px-3 py-1.5 font-mono text-xs font-semibold text-teal-300">AWS (EC2 basics)</span>
+            <span class="rounded-lg border border-slate-700 bg-slate-900 px-3 py-1.5 font-mono text-xs text-slate-200">Git &amp; GitHub</span>
+            <span class="rounded-lg border border-slate-700 bg-slate-900 px-3 py-1.5 font-mono text-xs text-slate-200">Postman</span>
+            <span class="rounded-lg border border-slate-700 bg-slate-900 px-3 py-1.5 font-mono text-xs text-slate-200">JUnit</span>
+            <span class="rounded-lg border border-slate-700 bg-slate-900 px-3 py-1.5 font-mono text-xs text-slate-200">Swagger (OpenAPI)</span>
+          </div>
+          <p class="mt-3 text-[11px] text-slate-400">Containerized cross-environment builds, automated unit testing with JUnit, and interactive API documentation with Swagger &amp; Postman.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ACHIEVEMENTS, RESEARCH PAPER & COMPETITIVE PROGRAMMING -->
+    <section id="achievements" class="py-10">
+      <div class="mb-6">
+        <div class="font-mono text-xs text-emerald-400">$ cat achievements_and_publications.log</div>
+        <h2 class="text-2xl sm:text-3xl font-bold text-white mt-1">Algorithmic Excellence, Published Research &amp; Hackathons</h2>
+      </div>
+
+      <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
+        <!-- Achievement 1: LeetCode -->
+        <div class="glass-card recruiter-spotlight rounded-2xl p-6 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between">
+              <span class="rounded-lg bg-amber-500/15 px-3 py-1 font-mono text-xs font-semibold text-amber-300 border border-amber-500/30">
+                Competitive DSA
+              </span>
+              <i data-lucide="code" class="h-5 w-5 text-amber-400"></i>
+            </div>
+            <h3 class="mt-4 text-lg font-bold text-white">400+ LeetCode Problems &amp; Top 10% Global Contest Rank</h3>
+            <p class="mt-2 text-xs sm:text-sm text-slate-300 leading-relaxed">
+              Solved over <strong>400 Data Structures &amp; Algorithms problems</strong> on LeetCode covering Dynamic Programming, Graphs, Trees, Heaps, and Concurrency, securing a <strong>global rank under the Top 10%</strong> in multiple LeetCode Weekly Contests.
+            </p>
+          </div>
+          <div class="mt-5 pt-3 border-t border-slate-800/80">
+            <a
+              href="https://leetcode.com/u/pawan_ghode/"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center gap-1.5 font-mono text-xs font-semibold text-amber-400 hover:underline"
+            >
+              <span>Inspect LeetCode Profile (@pawan_ghode)</span>
+              <i data-lucide="external-link" class="h-3.5 w-3.5"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- Achievement 2: Published AI Paper -->
+        <div class="glass-card recruiter-spotlight rounded-2xl p-6 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between">
+              <span class="rounded-lg bg-indigo-500/15 px-3 py-1 font-mono text-xs font-semibold text-indigo-300 border border-indigo-500/30">
+                Published Research (2026)
+              </span>
+              <i data-lucide="book-open" class="h-5 w-5 text-indigo-400"></i>
+            </div>
+            <h3 class="mt-4 text-lg font-bold text-white">AI-Powered Smart Physiotherapy Assistant</h3>
+            <p class="mt-2 text-xs sm:text-sm text-slate-300 leading-relaxed">
+              Co-authored and published an academic research paper on an AI-driven real-time posture monitoring system using <strong>MediaPipe Pose, OpenCV, and a TensorFlow Neural Network</strong> (achieving <strong>94.28% accuracy</strong> benchmarked against KNN, Random Forest, Logistic Regression, and Decision Tree models).
+            </p>
+          </div>
+          <div class="mt-5 pt-3 border-t border-slate-800/80 flex flex-wrap items-center gap-4">
+            <a
+              href="https://doi.org/10.21203/rs.3.rs-10049531/v1"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center gap-1.5 font-mono text-xs font-semibold text-indigo-400 hover:underline"
+            >
+              <span>DOI: 10.21203/rs.3.rs-10049531/v1</span>
+              <i data-lucide="external-link" class="h-3.5 w-3.5"></i>
+            </a>
+            <a
+              href="https://www.researchgate.net/publication/407843962_AI-Powered_Smart_Physiotherapy_Assistant"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center gap-1 font-mono text-xs text-slate-400 hover:text-white"
+            >
+              <span>ResearchGate</span>
+              <i data-lucide="external-link" class="h-3 w-3"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- Achievement 3: Hackathons & Open Source -->
+        <div class="glass-card recruiter-spotlight rounded-2xl p-6 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between">
+              <span class="rounded-lg bg-emerald-500/15 px-3 py-1 font-mono text-xs font-semibold text-emerald-300 border border-emerald-500/30">
+                Rapid Prototyping
+              </span>
+              <i data-lucide="flame" class="h-5 w-5 text-emerald-400"></i>
+            </div>
+            <h3 class="mt-4 text-lg font-bold text-white">Devpost &amp; HackerEarth 48-Hour Hackathons</h3>
+            <p class="mt-2 text-xs sm:text-sm text-slate-300 leading-relaxed">
+              Regularly participate in <strong>Devpost</strong> and <strong>HackerEarth</strong> weekend engineering challenges to architect, containerize, and deploy production-ready backend features under strict 48-hour deadlines.
+            </p>
+          </div>
+          <div class="mt-5 pt-3 border-t border-slate-800/80">
+            <a
+              href="https://github.com/Pawan-Ghode"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center gap-1.5 font-mono text-xs font-semibold text-emerald-400 hover:underline"
+            >
+              <span>Explore Repositories on GitHub</span>
+              <i data-lucide="external-link" class="h-3.5 w-3.5"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- RECRUITER FAST-TRACK CONTACT & INTERVIEW COMPOSER -->
+    <section id="contact" class="py-10">
+      <div class="glass-card rounded-3xl border border-slate-800 p-6 sm:p-10">
+        <div class="grid grid-cols-1 gap-8 lg:grid-cols-12">
+          <!-- Left Column: Direct Contact Channels -->
+          <div class="lg:col-span-5 space-y-5">
+            <div class="font-mono text-xs text-emerald-400">$ ./initiate_contact.sh --priority=high</div>
+            <h2 class="text-2xl sm:text-3xl font-bold text-white">Let's Build Something That Scales.</h2>
+            <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+              Currently open to <strong>Backend Software Engineer (Java / Spring Boot / Microservices)</strong> roles, full-time graduate opportunities (2026 batch), and technical interviews.
+            </p>
+
+            <div class="space-y-3 pt-2">
+              <!-- Email Card -->
+              <div class="flex items-center justify-between rounded-2xl border border-slate-800 bg-slate-950/70 p-3.5">
+                <div class="flex items-center gap-3 min-w-0">
+                  <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
+                    <i data-lucide="mail" class="h-5 w-5"></i>
+                  </div>
+                  <div class="min-w-0">
+                    <div class="font-mono text-[10px] uppercase tracking-wider text-slate-400">Direct Email</div>
+                    <a href="mailto:pawanghode85@gmail.com" class="truncate block font-mono text-xs sm:text-sm font-semibold text-white hover:text-emerald-400">
+                      pawanghode85@gmail.com
+                    </a>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onclick="copyText('pawanghode85@gmail.com', 'Email copied to clipboard!')"
+                  class="rounded-lg border border-slate-700 bg-slate-900 px-2.5 py-1.5 font-mono text-xs text-slate-300 hover:border-emerald-500 hover:text-white"
+                >
+                  Copy
+                </button>
+              </div>
+
+              <!-- Phone Card -->
+              <div class="flex items-center justify-between rounded-2xl border border-slate-800 bg-slate-950/70 p-3.5">
+                <div class="flex items-center gap-3">
+                  <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-cyan-500/15 text-cyan-400 border border-cyan-500/30">
+                    <i data-lucide="phone-call" class="h-5 w-5"></i>
+                  </div>
+                  <div>
+                    <div class="font-mono text-[10px] uppercase tracking-wider text-slate-400">Phone / WhatsApp</div>
+                    <a href="tel:+919579081065" class="font-mono text-xs sm:text-sm font-semibold text-white hover:text-cyan-400">
+                      +91 9579081065
+                    </a>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onclick="copyText('+91 9579081065', 'Phone number copied to clipboard!')"
+                  class="rounded-lg border border-slate-700 bg-slate-900 px-2.5 py-1.5 font-mono text-xs text-slate-300 hover:border-cyan-500 hover:text-white"
+                >
+                  Copy
+                </button>
+              </div>
+
+              <!-- LinkedIn & GitHub Row -->
+              <div class="grid grid-cols-2 gap-3 pt-1">
+                <a
+                  href="https://www.linkedin.com/in/pawan-ghode/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="flex items-center justify-center gap-2 rounded-xl border border-slate-800 bg-slate-950/70 p-3 text-xs font-semibold text-slate-200 transition hover:border-cyan-500/50 hover:text-cyan-300"
+                >
+                  <i data-lucide="linkedin" class="h-4 w-4 text-cyan-400"></i>
+                  <span>LinkedIn Profile</span>
+                </a>
+                <a
+                  href="https://github.com/Pawan-Ghode"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="flex items-center justify-center gap-2 rounded-xl border border-slate-800 bg-slate-950/70 p-3 text-xs font-semibold text-slate-200 transition hover:border-emerald-500/50 hover:text-emerald-300"
+                >
+                  <i data-lucide="github" class="h-4 w-4 text-emerald-400"></i>
+                  <span>GitHub Profile</span>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column: Interactive Recruiter Interview & Outreach Composer -->
+          <div class="lg:col-span-7 rounded-2xl border border-slate-800 bg-slate-950/80 p-5 sm:p-6">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+              <div>
+                <h3 class="text-base font-bold text-white">1-Click Recruiter Outreach &amp; Interview Composer</h3>
+                <p class="text-xs text-slate-400">Customize the fields below to generate a pre-filled interview invite for Pawan.</p>
+              </div>
+              <i data-lucide="send" class="h-5 w-5 text-emerald-400"></i>
+            </div>
+
+            <div class="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
+              <div>
+                <label for="recruiterCompanyInput" class="block font-mono text-[11px] text-slate-400 mb-1">Your Company / Team</label>
+                <input
+                  id="recruiterCompanyInput"
+                  type="text"
+                  value="Acme FinTech Engineering"
+                  oninput="updateOutreachPreview()"
+                  class="w-full rounded-xl border border-slate-800 bg-slate-900 px-3 py-2 text-xs text-white focus:border-emerald-500 focus:outline-none"
+                />
+              </div>
+              <div>
+                <label for="recruiterRoleInput" class="block font-mono text-[11px] text-slate-400 mb-1">Target Role Title</label>
+                <input
+                  id="recruiterRoleInput"
+                  type="text"
+                  value="Backend Software Engineer (Java / Spring Boot)"
+                  oninput="updateOutreachPreview()"
+                  class="w-full rounded-xl border border-slate-800 bg-slate-900 px-3 py-2 text-xs text-white focus:border-emerald-500 focus:outline-none"
+                />
+              </div>
+            </div>
+
+            <div class="mt-3">
+              <label for="recruiterTopicSelect" class="block font-mono text-[11px] text-slate-400 mb-1">Interview Focus / Next Step</label>
+              <select
+                id="recruiterTopicSelect"
+                onchange="updateOutreachPreview()"
+                class="w-full rounded-xl border border-slate-800 bg-slate-900 px-3 py-2 text-xs text-white focus:border-emerald-500 focus:outline-none"
+              >
+                <option value="intro">Schedule 15-Minute Recruiter Screening Call</option>
+                <option value="technical">Invite to Backend System Design &amp; Java Technical Round</option>
+                <option value="oa">Share Online Coding / DSA Assessment Link</option>
+              </select>
+            </div>
+
+            <div class="mt-3">
+              <label for="outreachMessageTextarea" class="block font-mono text-[11px] text-slate-400 mb-1">Generated Outreach Message</label>
+              <textarea
+                id="outreachMessageTextarea"
+                rows="4"
+                class="w-full rounded-xl border border-slate-800 bg-slate-900 p-3 font-mono text-xs text-slate-200 focus:border-emerald-500 focus:outline-none"
+              ></textarea>
+            </div>
+
+            <div class="mt-4 flex flex-wrap items-center gap-3">
+              <a
+                id="mailtoOutreachLink"
+                href="mailto:pawanghode85@gmail.com"
+                class="inline-flex items-center gap-2 rounded-xl bg-emerald-500 px-4 py-2.5 text-xs font-bold text-slate-950 transition hover:bg-emerald-400"
+              >
+                <i data-lucide="mail-check" class="h-4 w-4"></i>
+                <span>Open in Email Client</span>
+              </a>
+              <button
+                type="button"
+                onclick="copyOutreachMessage()"
+                class="inline-flex items-center gap-2 rounded-xl border border-slate-700 bg-slate-900 px-4 py-2.5 text-xs font-semibold text-slate-200 transition hover:border-slate-500"
+              >
+                <i data-lucide="copy" class="h-4 w-4 text-cyan-400"></i>
+                <span>Copy Outreach Message</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Minimal Footer -->
+  <footer class="border-t border-slate-800/80 bg-slate-950/90 py-8 no-print">
+    <div class="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-4 sm:flex-row sm:px-6 lg:px-8 text-xs text-slate-400">
+      <div class="flex items-center gap-2">
+        <span class="font-mono font-bold text-white">Pawan Janardhan Ghode</span>
+        <span>•</span>
+        <span>Nagpur, Maharashtra, India</span>
+        <span>•</span>
+        <span class="text-slate-500">© 2026 All rights reserved</span>
+      </div>
+      <div class="flex items-center gap-4 font-mono">
+        <a href="https://github.com/Pawan-Ghode" target="_blank" rel="noopener noreferrer" class="hover:text-white">GitHub</a>
+        <a href="https://www.linkedin.com/in/pawan-ghode/" target="_blank" rel="noopener noreferrer" class="hover:text-white">LinkedIn</a>
+        <a href="https://leetcode.com/u/pawan_ghode/" target="_blank" rel="noopener noreferrer" class="hover:text-white">LeetCode</a>
+        <a href="mailto:pawanghode85@gmail.com" class="hover:text-white">Email</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- INTERACTIVE RESUME MODAL -->
+  <div id="resumeModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/80 p-4 backdrop-blur-md">
+    <div class="relative flex max-h-[90vh] w-full max-w-4xl flex-col rounded-3xl border border-slate-700 bg-slate-900 shadow-2xl overflow-hidden">
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between border-b border-slate-800 bg-slate-950 px-6 py-4 no-print">
+        <div class="flex items-center gap-2.5">
+          <i data-lucide="file-text" class="h-5 w-5 text-emerald-400"></i>
+          <h3 class="font-mono text-sm font-bold text-white">RESUME-Pawan_Ghode.pdf (Verified ATS &amp; Recruiter View)</h3>
+        </div>
+        <div class="flex items-center gap-2">
+          <button
+            type="button"
+            onclick="copyPlainTextResume()"
+            class="inline-flex items-center gap-1.5 rounded-lg border border-slate-700 bg-slate-900 px-3 py-1.5 text-xs font-medium text-slate-200 hover:border-emerald-500"
+          >
+            <i data-lucide="copy" class="h-3.5 w-3.5 text-emerald-400"></i>
+            <span>Copy ATS Text</span>
+          </button>
+          <button
+            type="button"
+            onclick="window.print()"
+            class="inline-flex items-center gap-1.5 rounded-lg bg-emerald-500 px-3 py-1.5 text-xs font-bold text-slate-950 hover:bg-emerald-400"
+          >
+            <i data-lucide="printer" class="h-3.5 w-3.5"></i>
+            <span>Print / Save PDF</span>
+          </button>
+          <button
+            type="button"
+            onclick="closeResumeModal()"
+            class="rounded-lg p-1.5 text-slate-400 hover:bg-slate-800 hover:text-white"
+            aria-label="Close Resume Modal"
+          >
+            <i data-lucide="x" class="h-5 w-5"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Modal Printable Resume Content -->
+      <div class="overflow-y-auto p-6 sm:p-10 space-y-6 text-slate-200">
+        <div class="border-b border-slate-800 pb-5 text-center">
+          <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">PAWAN JANARDHAN GHODE</h2>
+          <p class="mt-1 font-mono text-xs text-slate-300">
+            pawanghode85@gmail.com | +91 9579081065 | Nagpur, India
+          </p>
+          <div class="mt-2 flex flex-wrap justify-center gap-3 font-mono text-xs text-emerald-400">
+            <a href="https://www.linkedin.com/in/pawan-ghode/" target="_blank" rel="noopener noreferrer" class="hover:underline">linkedin.com/in/pawan-ghode</a>
+            <span>|</span>
+            <a href="https://github.com/Pawan-Ghode" target="_blank" rel="noopener noreferrer" class="hover:underline">github.com/Pawan-Ghode</a>
+            <span>|</span>
+            <a href="https://pawan-ghode.github.io/about_me/" target="_blank" rel="noopener noreferrer" class="hover:underline">pawan-ghode.github.io/about_me</a>
+          </div>
+        </div>
+
+        <!-- Summary -->
+        <div>
+          <h4 class="font-mono text-xs font-bold uppercase tracking-wider text-emerald-400 border-b border-slate-800 pb-1">Summary</h4>
+          <p class="mt-2 text-xs sm:text-sm leading-relaxed text-slate-300">
+            Backend Developer with a strong foundation in Java, Spring Boot, and microservices architecture. Passionate about building highly scalable RESTful APIs, optimizing database query performance, and handling high-concurrency systems. Proficient in Data Structures and Algorithms with a proven track record of writing clean, production-ready code.
+          </p>
+        </div>
+
+        <!-- Internships -->
+        <div>
+          <h4 class="font-mono text-xs font-bold uppercase tracking-wider text-emerald-400 border-b border-slate-800 pb-1">Internships &amp; Pre-Onboarding Training</h4>
+          <div class="mt-3 space-y-4">
+            <div>
+              <div class="flex flex-wrap justify-between text-xs sm:text-sm font-bold text-white">
+                <span>Pre-Onboarding Advance ASE Trainee — Accenture</span>
+                <span class="font-mono text-emerald-400">06/2026 – 09/2026 | Nagpur, India</span>
+              </div>
+              <ul class="mt-1.5 list-disc pl-5 space-y-1 text-xs sm:text-sm text-slate-300">
+                <li>Engineered distributed cloud infrastructure configurations to support scalable enterprise-level system architectures (SAP BTP).</li>
+                <li>Executed a high-load database migration simulation, monitoring transactional logs to ensure 100% data consistency with zero downtime.</li>
+                <li>Modeled and optimized backend data pipeline architectures, streamlining enterprise application workflows for high-concurrency demands.</li>
+              </ul>
+            </div>
+
+            <div>
+              <div class="flex flex-wrap justify-between text-xs sm:text-sm font-bold text-white">
+                <span>Core Java Intern — UniConverge Technologies Pvt. Ltd.</span>
+                <span class="font-mono text-cyan-400">03/2026 – 04/2026 | Remote, India</span>
+              </div>
+              <ul class="mt-1.5 list-disc pl-5 space-y-1 text-xs sm:text-sm text-slate-300">
+                <li>Engineered a secure Banking Management System using Core Java, implementing modular object-oriented architecture for scalable transaction processing.</li>
+                <li>Optimized data validation and database interaction logic, reducing application execution errors by 40% and improving overall debugging efficiency.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Education -->
+        <div>
+          <h4 class="font-mono text-xs font-bold uppercase tracking-wider text-emerald-400 border-b border-slate-800 pb-1">Education</h4>
+          <div class="mt-2 flex flex-wrap justify-between text-xs sm:text-sm font-bold text-white">
+            <span>B.Tech in Information Technology — Yeshwantrao Chavan College of Engineering (YCCE), Nagpur</span>
+            <span class="font-mono text-teal-400">11/2022 – 05/2026 | CGPA: 7.90/10</span>
+          </div>
+        </div>
+
+        <!-- Skills -->
+        <div>
+          <h4 class="font-mono text-xs font-bold uppercase tracking-wider text-emerald-400 border-b border-slate-800 pb-1">Skills</h4>
+          <ul class="mt-2 space-y-1 text-xs sm:text-sm text-slate-300">
+            <li><strong class="text-white">Languages:</strong> Java (11/17), SQL, Python</li>
+            <li><strong class="text-white">Backend &amp; Frameworks:</strong> Spring Boot, Spring Security (JWT, OAuth2), Hibernate (JPA), Microservices, OOP Principles</li>
+            <li><strong class="text-white">Databases &amp; Caching:</strong> PostgreSQL, MySQL, Redis</li>
+            <li><strong class="text-white">Tools &amp; Deployment:</strong> Git, Docker, Postman, AWS (EC2 basics), JUnit, Swagger</li>
+            <li><strong class="text-white">Architecture &amp; Messaging:</strong> REST API Design, Apache Kafka, MVC Pattern, System Design (HLD)</li>
+          </ul>
+        </div>
+
+        <!-- Projects -->
+        <div>
+          <h4 class="font-mono text-xs font-bold uppercase tracking-wider text-emerald-400 border-b border-slate-800 pb-1">Projects</h4>
+          <div class="mt-3 space-y-4">
+            <div>
+              <div class="flex flex-wrap justify-between text-xs sm:text-sm font-bold text-white">
+                <span>Fintech Payment Processing API (Spring Boot, MySQL, Apache Kafka)</span>
+                <a href="https://github.com/Pawan-Ghode/Fintech-Payment-Processing-API" target="_blank" rel="noopener noreferrer" class="font-mono text-xs text-emerald-400 hover:underline">GitHub Repo ↗</a>
+              </div>
+              <ul class="mt-1 list-disc pl-5 space-y-1 text-xs sm:text-sm text-slate-300">
+                <li>Developed a robust payment gateway simulation utilizing Spring Boot to process simulated transactions with strict adherence to ACID properties.</li>
+                <li>Integrated Apache Kafka as a message broker to asynchronously handle payment notifications and invoice generation, decoupling the core transaction service.</li>
+                <li>Designed idempotent REST endpoints to ensure safe retries during network failures, preventing duplicate fund deductions.</li>
+              </ul>
+            </div>
+
+            <div>
+              <div class="flex flex-wrap justify-between text-xs sm:text-sm font-bold text-white">
+                <span>Scalable Movie Ticketing Backend — BookMyShow Clone (Java, Spring Boot, PostgreSQL, Redis, Docker)</span>
+                <a href="https://github.com/Pawan-Ghode/Scalable-Movie-Ticketing-Backend" target="_blank" rel="noopener noreferrer" class="font-mono text-xs text-cyan-400 hover:underline">GitHub Repo ↗</a>
+              </div>
+              <ul class="mt-1 list-disc pl-5 space-y-1 text-xs sm:text-sm text-slate-300">
+                <li>Architected a highly concurrent ticketing API handling multiple simultaneous booking requests using DB pessimistic/optimistic locking to prevent double-booking.</li>
+                <li>Implemented Redis Caching for frequently accessed data (e.g., movie listings and theater layouts), reducing database read load and improving API response time by 60%.</li>
+                <li>Containerized the application using Docker for consistent cross-environment deployment and integrated Spring Security with JWT for secure user sessions.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Achievements -->
+        <div>
+          <h4 class="font-mono text-xs font-bold uppercase tracking-wider text-emerald-400 border-b border-slate-800 pb-1">Achievements &amp; Extracurriculars</h4>
+          <ul class="mt-2 list-disc pl-5 space-y-1 text-xs sm:text-sm text-slate-300">
+            <li><strong class="text-white">Algorithmic Problem Solving:</strong> Solved 400+ DSA problems on LeetCode and secured a global rank under top 10% in multiple LeetCode Weekly Contests.</li>
+            <li><strong class="text-white">Research &amp; AI Integration:</strong> Co-authored and published an academic research paper on an AI-driven posture monitoring system (<em>AI-Powered Smart Physiotherapy Assistant</em>, DOI: 10.21203/rs.3.rs-10049531/v1).</li>
+            <li><strong class="text-white">Open Source &amp; Hackathons:</strong> Regularly participate in Devpost and HackerEarth weekend challenges to build and deploy backend features under strict 48-hour deadlines.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMMAND PALETTE MODAL (⌘K) -->
+  <div id="cmdPaletteModal" class="fixed inset-0 z-50 hidden items-start justify-center bg-slate-950/80 pt-20 p-4 backdrop-blur-md no-print">
+    <div class="w-full max-w-xl rounded-2xl border border-slate-700 bg-slate-900 shadow-2xl overflow-hidden">
+      <div class="flex items-center border-b border-slate-800 px-4 py-3">
+        <i data-lucide="terminal" class="h-4 w-4 text-emerald-400 mr-3"></i>
+        <input
+          id="cmdSearchInput"
+          type="text"
+          oninput="filterCmdPalette(this.value)"
+          placeholder="Type a recruiter action or jump to section..."
+          class="w-full bg-transparent font-mono text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none"
+        />
+        <button
+          type="button"
+          onclick="closeCmdPalette()"
+          class="rounded bg-slate-800 px-2 py-0.5 font-mono text-[10px] text-slate-400 hover:text-white"
+        >
+          ESC
+        </button>
+      </div>
+      <div id="cmdPaletteList" class="max-h-80 overflow-y-auto p-2 space-y-1"></div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION -->
+  <div id="toastContainer" class="fixed bottom-5 right-5 z-50 hidden items-center gap-2.5 rounded-xl border border-emerald-500/40 bg-slate-900/95 px-4 py-3 text-xs font-semibold text-white shadow-2xl backdrop-blur-md no-print">
+    <i data-lucide="check-circle-2" class="h-4 w-4 text-emerald-400"></i>
+    <span id="toastMessage">Copied to clipboard!</span>
+  </div>
+
+  <!-- APPLICATION SCRIPT -->
+  <script>
+    // --- 1. Grounded State & Data Inventory ---
+    const appState = {
+      theme: 'dark',
+      recruiterMode: false,
+      selectedRolePreset: 'java-microservices',
+      selectedSkills: new Set([
+        'Java (11/17)',
+        'Spring Boot',
+        'Spring Security (JWT, OAuth2)',
+        'Hibernate (JPA)',
+        'Microservices',
+        'Apache Kafka',
+        'REST API Design',
+        'Docker'
+      ]),
+      activeArchProject: 'fintech',
+      simScenario: 'idempotent_retry',
+      simStepIndex: 0
+    };
+
+    const ALL_SKILLS = [
+      'Java (11/17)',
+      'Spring Boot',
+      'Spring Security (JWT, OAuth2)',
+      'Hibernate (JPA)',
+      'Microservices',
+      'OOP Principles',
+      'PostgreSQL',
+      'MySQL',
+      'Redis',
+      'Apache Kafka',
+      'REST API Design',
+      'System Design (HLD)',
+      'MVC Pattern',
+      'SQL',
+      'Python',
+      'Docker',
+      'AWS (EC2 basics)',
+      'Git',
+      'Postman',
+      'JUnit',
+      'Swagger',
+      'SAP BTP'
+    ];
+
+    const ROLE_PRESETS = {
+      'java-microservices': [
+        'Java (11/17)',
+        'Spring Boot',
+        'Spring Security (JWT, OAuth2)',
+        'Hibernate (JPA)',
+        'Microservices',
+        'Apache Kafka',
+        'REST API Design',
+        'Docker'
+      ],
+      'high-concurrency': [
+        'Java (11/17)',
+        'Spring Boot',
+        'PostgreSQL',
+        'Redis',
+        'System Design (HLD)',
+        'Docker',
+        'Apache Kafka'
+      ],
+      'fintech-acid': [
+        'Java (11/17)',
+        'Spring Boot',
+        'MySQL',
+        'Apache Kafka',
+        'REST API Design',
+        'Spring Security (JWT, OAuth2)',
+        'JUnit'
+      ],
+      'cloud-enterprise': [
+        'Java (11/17)',
+        'SAP BTP',
+        'AWS (EC2 basics)',
+        'Docker',
+        'PostgreSQL',
+        'MySQL',
+        'System Design (HLD)',
+        'Git'
+      ],
+      'all': [...ALL_SKILLS]
+    };
+
+    const EVIDENCE_ITEMS = [
+      {
+        title: 'Scalable Movie Ticketing Backend (BookMyShow Clone)',
+        role: 'Backend Architecture Project',
+        metric: '-60% API Latency · 0 Double Bookings',
+        skills: ['Java (11/17)', 'Spring Boot', 'PostgreSQL', 'Redis', 'Docker', 'Spring Security (JWT, OAuth2)', 'REST API Design', 'System Design (HLD)'],
+        summary: 'Implemented DB pessimistic/optimistic locking for concurrent seat booking, Redis caching for theater layouts (-60% response time), and Docker + JWT auth.'
+      },
+      {
+        title: 'Fintech Payment Processing API',
+        role: 'Transactional Microservice Project',
+        metric: '100% ACID · Idempotent Retries',
+        skills: ['Java (11/17)', 'Spring Boot', 'MySQL', 'Apache Kafka', 'REST API Design', 'Microservices', 'Postman', 'Swagger', 'JUnit'],
+        summary: 'Built an ACID-compliant payment gateway simulation with idempotent REST endpoints and Apache Kafka asynchronous invoice/notification consumers.'
+      },
+      {
+        title: 'Accenture — Pre-Onboarding Advance ASE Trainee',
+        role: 'Enterprise Architecture Training (06/2026 – 09/2026)',
+        metric: '100% Data Consistency · Zero Downtime',
+        skills: ['SAP BTP', 'System Design (HLD)', 'AWS (EC2 basics)', 'SQL', 'PostgreSQL', 'MySQL', 'Microservices'],
+        summary: 'Configured distributed cloud infrastructure (SAP BTP) and executed a high-load database migration simulation with transactional log monitoring.'
+      },
+      {
+        title: 'UniConverge Technologies — Core Java Intern',
+        role: 'Software Engineering Internship (03/2026 – 04/2026)',
+        metric: '-40% Application Execution Errors',
+        skills: ['Java (11/17)', 'OOP Principles', 'SQL', 'MVC Pattern', 'Git', 'JUnit'],
+        summary: 'Engineered a modular Banking Management System in Core Java and optimized database validation logic to cut execution errors by 40%.'
+      },
+      {
+        title: 'Smart Expense Analytics & Budget Backend',
+        role: 'Personal Finance API Project',
+        metric: 'Stateless JWT · Optimized SQL Alerts',
+        skills: ['Java (11/17)', 'Spring Boot', 'Hibernate (JPA)', 'MySQL', 'SQL', 'Spring Security (JWT, OAuth2)', 'REST API Design'],
+        summary: 'Implemented stateless JWT authentication, Hibernate JPA entity relationships, and optimized SQL queries for automated budget threshold alerts.'
+      },
+      {
+        title: 'LeetCode 400+ DSA & Published AI Research',
+        role: 'Algorithms & AI Pose Estimation Paper',
+        metric: 'Top 10% LeetCode · 94.28% NN Accuracy',
+        skills: ['Java (11/17)', 'Python', 'OOP Principles', 'Git'],
+        summary: 'Solved 400+ LeetCode problems (Top 10% Weekly Contests) and co-authored published AI Physiotherapy research using Python, TensorFlow & MediaPipe.'
+      }
+    ];
+
+    const ARCH_PROJECTS = {
+      fintech: {
+        title: 'Fintech Payment Processing API',
+        subtitle: 'Spring Boot · MySQL (ACID Ledger) · Apache Kafka Broker · Idempotent REST Endpoints',
+        repoUrl: 'https://github.com/Pawan-Ghode/Fintech-Payment-Processing-API',
+        nodes: [
+          { id: 'client', title: '1. Merchant Client', tech: 'POST /api/v1/payments', detail: 'Sends Idempotency-Key header + amount payload' },
+          { id: 'idempotency', title: '2. Idempotency Guard', tech: 'Spring Boot REST Filter', detail: 'Deduplicates network retries before ledger write' },
+          { id: 'acid_db', title: '3. ACID Ledger TX', tech: 'MySQL @Transactional', detail: 'Atomic debit/credit with strict isolation' },
+          { id: 'kafka', title: '4. Event Broker', tech: 'Apache Kafka Topic', detail: 'Publishes payment.completed event asynchronously' },
+          { id: 'workers', title: '5. Async Consumers', tech: 'Invoice & Notification', detail: 'Generates PDF receipt & email without blocking API' }
+        ],
+        scenarios: {
+          idempotent_retry: {
+            label: 'Network Failure Retry (Idempotency-Key Protection)',
+            latency: '14ms (Cached Idempotent Response)',
+            status: '200 OK (Idempotent Hit)',
+            steps: [
+              '[00ms] Client retries POST /api/v1/payments with header Idempotency-Key: "tx_99481a"',
+              '[03ms] Spring Boot IdempotencyInterceptor checks key "tx_99481a" in transaction store',
+              '[06ms] MATCH FOUND -> Previous committed transaction #TX-88210 detected',
+              '[09ms] MySQL ACID ledger write SKIPPED -> Prevents duplicate ₹4,500.00 deduction!',
+              '[14ms] Returns original signed 200 OK receipt payload safely to client'
+            ],
+            payload: `HTTP/1.1 200 OK
+X-Idempotency-Replayed: true
+Content-Type: application/json
+
+{
+  "transactionId": "TX-88210",
+  "idempotencyKey": "tx_99481a",
+  "status": "SUCCESS_ALREADY_PROCESSED",
+  "amountINR": 4500.00,
+  "acidCompliance": "SERIALIZABLE_COMMITTED",
+  "duplicateDeductionPrevented": true,
+  "kafkaEventOffset": 41092
+}`,
+            takeaway: 'Engineering Proof: Pawan designed idempotent REST endpoints so network timeouts never double-charge a customer.'
+          },
+          standard_acid: {
+            label: 'Fresh ACID Payment + Async Kafka Dispatch',
+            latency: '28ms (Non-Blocking Async)',
+            status: '201 CREATED',
+            steps: [
+              '[00ms] POST /api/v1/payments received with new Idempotency-Key: "tx_77102b"',
+              '[05ms] Spring Boot begins @Transactional(isolation = SERIALIZABLE) MySQL block',
+              '[16ms] MySQL verifies balance, records debit/credit ledger entries & commits ACID TX',
+              '[21ms] KafkaTemplate publishes PaymentCompletedEvent to topic "fintech.payments.v1"',
+              '[28ms] API returns 201 CREATED immediately while Kafka consumers generate invoice asynchronously'
+            ],
+            payload: `HTTP/1.1 201 Created
+Content-Type: application/json
+
+{
+  "transactionId": "TX-88219",
+  "status": "COMMITTED",
+  "amountINR": 12000.00,
+  "kafkaTopic": "fintech.payments.v1",
+  "asyncWorkersTriggered": [
+    "NotificationConsumer",
+    "InvoiceGeneratorConsumer"
+  ]
+}`,
+            takeaway: 'Engineering Proof: Decoupling notifications and invoicing via Apache Kafka keeps core payment latency low.'
+          }
+        }
+      },
+      ticketing: {
+        title: 'Scalable Movie Ticketing Backend (BookMyShow Clone)',
+        subtitle: 'Java 17 · Spring Boot · PostgreSQL (Pessimistic/Optimistic Locks) · Redis Cache (-60% Latency) · Docker',
+        repoUrl: 'https://github.com/Pawan-Ghode/Scalable-Movie-Ticketing-Backend',
+        nodes: [
+          { id: 'client', title: '1. Concurrent Users', tech: 'JWT Bearer Request', detail: 'Simultaneous seat booking & layout queries' },
+          { id: 'jwt', title: '2. Security Filter', tech: 'Spring Security + JWT', detail: 'Validates stateless session claims' },
+          { id: 'redis', title: '3. Redis Cache Layer', tech: 'Theater Layout Cache', detail: 'Cuts DB read load & latency by 60%' },
+          { id: 'lock', title: '4. Concurrency Lock', tech: 'DB Pessimistic/Optimistic', detail: 'Prevents race conditions on seat rows' },
+          { id: 'postgres', title: '5. Dockerized DB', tech: 'PostgreSQL Container', detail: 'Persists confirmed ticket & seat state' }
+        ],
+        scenarios: {
+          seat_lock: {
+            label: 'Concurrent Seat Booking Race Condition (2 Users -> Seat A12)',
+            latency: '31ms (Lock Serialized)',
+            status: '200 OK / 409 CONFLICT Guarded',
+            steps: [
+              '[00ms] User_A and User_B simultaneously send POST /api/v1/bookings for Seat "A12" (Show #402)',
+              '[04ms] Spring Security JWT filter authenticates both stateless tokens',
+              '[11ms] PostgreSQL acquires row-level lock (SELECT ... FOR UPDATE) for User_A on Seat "A12"',
+              '[24ms] User_A transaction commits -> Seat "A12" state updated to BOOKED; Redis cache invalidated',
+              '[31ms] User_B receives deterministic 409 CONFLICT (Double-Booking Prevented!)'
+            ],
+            payload: `HTTP/1.1 200 OK (User_A) | 409 Conflict (User_B)
+Content-Type: application/json
+
+{
+  "showId": 402,
+  "seatNumber": "A12",
+  "winnerRequest": "User_A (TX_Committed)",
+  "concurrentRequest": "User_B (Blocked_By_DB_Lock)",
+  "lockStrategy": "PESSIMISTIC_WRITE / OPTIMISTIC_VERSION",
+  "doubleBookingOccurred": false
+}`,
+            takeaway: 'Engineering Proof: Pessimistic/optimistic locking guarantees zero double-bookings during blockbuster ticket drops.'
+          },
+          redis_cache: {
+            label: 'High-Traffic Movie Listing & Theater Layout Read (Redis HIT)',
+            latency: '11ms (-60% vs DB Read)',
+            status: '200 OK (X-Cache: HIT)',
+            steps: [
+              '[00ms] GET /api/v1/shows/402/seat-map requested during peak traffic spike',
+              '[03ms] Spring Boot checks Redis cluster key "show:402:layout"',
+              '[07ms] REDIS CACHE HIT -> Serialized theater matrix retrieved in 4ms (PostgreSQL bypassed)',
+              '[11ms] Response delivered 60% faster than direct relational join query'
+            ],
+            payload: `HTTP/1.1 200 OK
+X-Cache-Status: HIT
+X-Response-Time-Improvement: 60%
+Content-Type: application/json
+
+{
+  "showId": 402,
+  "movieTitle": "Interstellar IMAX",
+  "availableSeats": 142,
+  "source": "REDIS_IN_MEMORY_CACHE",
+  "latencyMs": 11
+}`,
+            takeaway: 'Engineering Proof: Redis caching reduced database read load and improved API response time by 60%.'
+          }
+        }
+      },
+      expense: {
+        title: 'Smart Expense Analytics & Budget Backend',
+        subtitle: 'Java · Spring Boot · Hibernate (JPA) · MySQL Aggregation · Stateless JWT Authentication',
+        repoUrl: 'https://github.com/Pawan-Ghode',
+        nodes: [
+          { id: 'client', title: '1. Client Request', tech: 'Bearer JWT Header', detail: 'Requests monthly analytics & logs expense' },
+          { id: 'jwt', title: '2. Stateless Auth', tech: 'JWT Filter Chain', detail: 'Zero server session memory overhead' },
+          { id: 'hibernate', title: '3. ORM Persistence', tech: 'Hibernate / JPA', detail: 'Normalized Expense <-> Category mapping' },
+          { id: 'sql', title: '4. SQL Aggregator', tech: 'Optimized MySQL Query', detail: 'Indexed GROUP BY category rollups' },
+          { id: 'alerts', title: '5. Budget Alert Engine', tech: 'Threshold Evaluator', detail: 'Triggers automated overspend notifications' }
+        ],
+        scenarios: {
+          budget_alert: {
+            label: 'Expense Creation + Optimized SQL Budget Threshold Alert',
+            latency: '19ms',
+            status: '201 CREATED (Alert Triggered)',
+            steps: [
+              '[00ms] POST /api/v1/expenses with Bearer JWT token (Stateless user verification)',
+              '[05ms] Hibernate JPA maps Expense entity to Category("Cloud & Dining")',
+              '[12ms] Optimized MySQL indexed aggregation computes monthly category spend total',
+              '[16ms] Spend reaches 92% of monthly cap -> Automated Budget Alert triggered',
+              '[19ms] Returns updated category breakdown + active budget warning'
+            ],
+            payload: `HTTP/1.1 201 Created
+Content-Type: application/json
+
+{
+  "expenseId": 9041,
+  "authMode": "STATELESS_JWT",
+  "category": "Cloud & Dining",
+  "monthlySpendINR": 18400.00,
+  "monthlyBudgetINR": 20000.00,
+  "utilizationPct": 92.0,
+  "automatedAlert": "THRESHOLD_EXCEEDED_90_PCT"
+}`,
+            takeaway: 'Engineering Proof: Combines stateless JWT security with optimized SQL analytical rollups and Hibernate ORM.'
+          }
+        }
+      }
+    };
+
+    const CMD_ACTIONS = [
+      { label: 'Toggle 15-Second Recruiter Scan Mode', hint: 'Highlight metrics & executive brief', action: () => toggleRecruiterMode() },
+      { label: 'Open Printable / ATS Resume Modal', hint: 'View RESUME-Pawan_Ghode.pdf', action: () => openResumeModal() },
+      { label: 'Copy Candidate Summary for Hiring Team', hint: 'Clipboard pitch with metrics & links', action: () => copyRecruiterSummary() },
+      { label: 'Copy Email (pawanghode85@gmail.com)', hint: 'Direct contact', action: () => copyText('pawanghode85@gmail.com', 'Email copied!') },
+      { label: 'Jump to Interactive Role & JD Stack Matcher', hint: '#recruiter-match', action: () => scrollToSection('recruiter-match') },
+      { label: 'Simulate Fintech Payment API (Kafka + ACID)', hint: '#architecture', action: () => { selectArchProject('fintech'); scrollToSection('architecture'); } },
+      { label: 'Simulate Movie Ticketing API (Redis + DB Locks)', hint: '#architecture', action: () => { selectArchProject('ticketing'); scrollToSection('architecture'); } },
+      { label: 'Switch Dark / Light Theme', hint: 'Toggle visual theme', action: () => toggleTheme() }
+    ];
+
+    // --- 2. Typewriter Subtitle Effect ---
+    const TYPEWRITER_PHRASES = [
+      'Java (11/17) & Spring Boot Microservices Developer',
+      'High-Concurrency API & Redis Caching Engineer (-60% Latency)',
+      'Apache Kafka & ACID Transactional Backend Builder',
+      '400+ LeetCode Solver (Top 10% Global) & Published AI Researcher'
+    ];
+    let phraseIdx = 0;
+
+    function rotateTypewriter() {
+      const el = document.getElementById('typewriterText');
+      if (!el) return;
+      phraseIdx = (phraseIdx + 1) % TYPEWRITER_PHRASES.length;
+      el.style.opacity = '0';
+      setTimeout(() => {
+        el.textContent = TYPEWRITER_PHRASES[phraseIdx];
+        el.style.opacity = '1';
+      }, 220);
+    }
+
+    // --- 3. Hero Telemetry Tabs ---
+    function switchHeroTab(tabName) {
+      ['snapshot', 'benchmarks', 'json'].forEach((t) => {
+        const btn = document.getElementById('heroTabBtn-' + t);
+        const content = document.getElementById('heroTabContent-' + t);
+        if (!btn || !content) return;
+        if (t === tabName) {
+          btn.className = 'rounded-lg bg-emerald-500/20 border border-emerald-500/40 py-1.5 font-mono text-xs font-semibold text-emerald-300 transition';
+          content.classList.remove('hidden');
+        } else {
+          btn.className = 'rounded-lg py-1.5 font-mono text-xs font-medium text-slate-400 transition hover:text-white';
+          content.classList.add('hidden');
+        }
       });
-    }, { rootMargin: "-45% 0px -50% 0px", threshold: 0 });
+    }
 
-    sections.forEach(function (s) { observer.observe(s); });
-  }
+    // --- 4. Recruiter Mode Toggle ---
+    function toggleRecruiterMode() {
+      appState.recruiterMode = !appState.recruiterMode;
+      const banner = document.getElementById('recruiterBriefBanner');
+      const badge = document.getElementById('recruiterModeBadge');
+      if (appState.recruiterMode) {
+        document.body.classList.add('recruiter-active');
+        if (banner) banner.classList.remove('hidden');
+        if (badge) {
+          badge.textContent = 'ON';
+          badge.className = 'ml-1 rounded bg-emerald-400 px-1.5 py-0.2 font-mono text-[10px] font-bold text-slate-950';
+        }
+        showToast('15-Second Recruiter Scan ON — Executive summary & impact metrics highlighted!');
+      } else {
+        document.body.classList.remove('recruiter-active');
+        if (banner) banner.classList.add('hidden');
+        if (badge) {
+          badge.textContent = 'OFF';
+          badge.className = 'ml-1 rounded bg-emerald-400/20 px-1.5 py-0.2 font-mono text-[10px] text-emerald-300';
+        }
+        showToast('Standard Portfolio View restored');
+      }
+      if (window.lucide) window.lucide.createIcons();
+    }
 
-  /* ---- hero role: one typed line on load ---- */
-  var roleEl = document.getElementById("typedRole");
-  var roleText = "Java Backend Developer";
+    // --- 5. Interactive Role-Fit & Stack Matcher ---
+    function selectRolePreset(presetKey) {
+      appState.selectedRolePreset = presetKey;
+      const skills = ROLE_PRESETS[presetKey] || ROLE_PRESETS['java-microservices'];
+      appState.selectedSkills = new Set(skills);
 
-  if (!reduceMotion && roleEl) {
-    roleEl.textContent = "";
-    var cursor = document.createElement("span");
-    cursor.className = "cursor";
-    cursor.setAttribute("aria-hidden", "true");
-    roleEl.appendChild(cursor);
+      ['java-microservices', 'high-concurrency', 'fintech-acid', 'cloud-enterprise', 'all'].forEach((k) => {
+        const btn = document.getElementById('presetBtn-' + k);
+        if (!btn) return;
+        if (k === presetKey) {
+          btn.className = 'rounded-xl border border-emerald-500 bg-emerald-500/20 px-3.5 py-2 text-xs font-semibold text-emerald-300 transition';
+        } else {
+          btn.className = 'rounded-xl border border-slate-700 bg-slate-900/80 px-3.5 py-2 text-xs font-medium text-slate-300 transition hover:border-slate-500';
+        }
+      });
 
-    var i = 0;
-    var tick = setInterval(function () {
-      if (i >= roleText.length) { clearInterval(tick); return; }
-      cursor.insertAdjacentText("beforebegin", roleText.charAt(i));
-      i += 1;
-    }, 55);
-  }
-})();
-</script>
+      renderStackMatcher();
+    }
+
+    function toggleSkillSelection(skillName) {
+      if (appState.selectedSkills.has(skillName)) {
+        if (appState.selectedSkills.size > 1) {
+          appState.selectedSkills.delete(skillName);
+        }
+      } else {
+        appState.selectedSkills.add(skillName);
+      }
+      renderStackMatcher();
+    }
+
+    function renderStackMatcher() {
+      const pillsContainer = document.getElementById('matcherSkillPills');
+      const evidenceContainer = document.getElementById('matcherEvidenceGrid');
+      const scoreEl = document.getElementById('matchScoreReadout');
+      const countEl = document.getElementById('matchCountReadout');
+      const evidenceCountEl = document.getElementById('matchedEvidenceCount');
+
+      if (!pillsContainer || !evidenceContainer) return;
+
+      // Render skill pills
+      pillsContainer.innerHTML = ALL_SKILLS.map((skill) => {
+        const active = appState.selectedSkills.has(skill);
+        const safeSkill = skill.replace(/'/g, "\\'");
+        return `<button
+          type="button"
+          onclick="toggleSkillSelection('${safeSkill}')"
+          class="rounded-lg px-3 py-1.5 font-mono text-xs transition flex items-center gap-1.5 ${
+            active
+              ? 'border border-emerald-500 bg-emerald-500/20 text-emerald-300 font-semibold shadow-sm'
+              : 'border border-slate-800 bg-slate-950/60 text-slate-400 hover:border-slate-600 hover:text-slate-200'
+          }"
+        >
+          <span>${active ? '✓' : '+'}</span>
+          <span>${skill}</span>
+        </button>`;
+      }).join('');
+
+      const selectedArr = Array.from(appState.selectedSkills);
+      if (scoreEl) scoreEl.textContent = '100%';
+      if (countEl) countEl.textContent = `${selectedArr.length} / ${selectedArr.length} required skills verified in Pawan's stack`;
+
+      // Filter and rank evidence cards
+      const scoredEvidence = EVIDENCE_ITEMS.map((item) => {
+        const matched = item.skills.filter((s) => appState.selectedSkills.has(s));
+        return { ...item, matched };
+      }).filter((item) => item.matched.length > 0)
+        .sort((a, b) => b.matched.length - a.matched.length);
+
+      if (evidenceCountEl) {
+        evidenceCountEl.textContent = `Showing ${scoredEvidence.length} verified experience & project proofs`;
+      }
+
+      evidenceContainer.innerHTML = scoredEvidence.map((item) => `
+        <div class="rounded-2xl border border-slate-800 bg-slate-950/80 p-4 flex flex-col justify-between">
+          <div>
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <span class="font-mono text-[11px] text-cyan-400">${item.role}</span>
+              <span class="rounded bg-emerald-500/15 px-2 py-0.5 font-mono text-[10px] font-bold text-emerald-300 border border-emerald-500/30">${item.metric}</span>
+            </div>
+            <h4 class="mt-1.5 text-sm font-bold text-white">${item.title}</h4>
+            <p class="mt-1.5 text-xs text-slate-300 leading-relaxed">${item.summary}</p>
+          </div>
+          <div class="mt-3 pt-2.5 border-t border-slate-800/80 flex flex-wrap gap-1.5">
+            ${item.matched.map((m) => `<span class="rounded bg-emerald-500/15 px-2 py-0.5 font-mono text-[10px] text-emerald-300 border border-emerald-500/30">✓ ${m}</span>`).join('')}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // --- 6. Interactive Architecture & Live Request Flow Simulator ---
+    function selectArchProject(projKey) {
+      appState.activeArchProject = projKey;
+      const proj = ARCH_PROJECTS[projKey];
+      if (!proj) return;
+
+      ['fintech', 'ticketing', 'expense'].forEach((k) => {
+        const btn = document.getElementById('archTab-' + k);
+        if (!btn) return;
+        if (k === projKey) {
+          btn.className = 'rounded-xl border border-emerald-500 bg-emerald-500/20 px-4 py-2 text-xs font-bold text-emerald-300 transition';
+        } else {
+          btn.className = 'rounded-xl border border-slate-700 bg-slate-900 px-4 py-2 text-xs font-semibold text-slate-300 transition hover:border-slate-500';
+        }
+      });
+
+      const titleEl = document.getElementById('archProjectTitle');
+      const subEl = document.getElementById('archProjectSubtitle');
+      const repoEl = document.getElementById('archRepoLink');
+      const selectEl = document.getElementById('simScenarioSelect');
+
+      if (titleEl) titleEl.textContent = proj.title;
+      if (subEl) subEl.textContent = proj.subtitle;
+      if (repoEl) repoEl.href = proj.repoUrl;
+
+      const scenarioKeys = Object.keys(proj.scenarios);
+      appState.simScenario = scenarioKeys[0];
+
+      if (selectEl) {
+        selectEl.innerHTML = scenarioKeys.map((k) => `<option value="${k}">${proj.scenarios[k].label}</option>`).join('');
+      }
+
+      renderArchitectureSandbox();
+    }
+
+    function changeSimScenario(scenarioKey) {
+      appState.simScenario = scenarioKey;
+      renderArchitectureSandbox();
+    }
+
+    function renderArchitectureSandbox(highlightIndex = -1) {
+      const proj = ARCH_PROJECTS[appState.activeArchProject];
+      if (!proj) return;
+      const scenario = proj.scenarios[appState.simScenario] || Object.values(proj.scenarios)[0];
+
+      const diagramEl = document.getElementById('archDiagramContainer');
+      const stepsEl = document.getElementById('archTraceStepsList');
+      const payloadEl = document.getElementById('archPayloadPre');
+      const latencyEl = document.getElementById('traceLatencyBadge');
+      const statusEl = document.getElementById('httpStatusBadge');
+      const takeawayEl = document.getElementById('archEngineeringTakeaway');
+      const badgeEl = document.getElementById('archActiveStepBadge');
+
+      if (diagramEl) {
+        diagramEl.innerHTML = proj.nodes.map((node, idx) => {
+          const isCurrent = highlightIndex === idx;
+          return `<button
+            type="button"
+            onclick="renderArchitectureSandbox(${idx})"
+            class="arch-node text-left rounded-2xl border p-4 transition flex flex-col justify-between ${
+              isCurrent
+                ? 'border-emerald-400 bg-emerald-500/20 active-step'
+                : 'border-slate-800 bg-slate-950/90 hover:border-slate-600'
+            }"
+          >
+            <div>
+              <div class="flex items-center justify-between">
+                <span class="font-mono text-[10px] uppercase tracking-wider ${isCurrent ? 'text-emerald-300 font-bold' : 'text-slate-400'}">Stage 0${idx + 1}</span>
+                <span class="h-2 w-2 rounded-full ${isCurrent ? 'bg-emerald-400 animate-ping' : 'bg-emerald-500/60'}"></span>
+              </div>
+              <div class="mt-2 text-xs sm:text-sm font-bold text-white">${node.title}</div>
+              <div class="mt-1 font-mono text-[11px] text-cyan-400">${node.tech}</div>
+            </div>
+            <p class="mt-2.5 text-[11px] text-slate-400 leading-snug">${node.detail}</p>
+          </button>`;
+        }).join('');
+      }
+
+      if (stepsEl) {
+        stepsEl.innerHTML = scenario.steps.map((stepText, idx) => {
+          const active = highlightIndex === -1 || highlightIndex >= idx;
+          const current = highlightIndex === idx;
+          return `<div class="rounded-xl border px-3 py-2 transition ${
+            current
+              ? 'border-emerald-500/60 bg-emerald-500/15 text-emerald-200 font-semibold'
+              : active
+              ? 'border-slate-800 bg-slate-900/70 text-slate-300'
+              : 'border-slate-900 bg-slate-950/40 text-slate-600'
+          }">
+            <span class="text-emerald-400 mr-1.5">➜</span>${stepText}
+          </div>`;
+        }).join('');
+      }
+
+      if (payloadEl) payloadEl.textContent = scenario.payload;
+      if (latencyEl) latencyEl.textContent = `Latency: ${scenario.latency}`;
+      if (statusEl) statusEl.textContent = scenario.status;
+      if (takeawayEl) takeawayEl.textContent = scenario.takeaway;
+      if (badgeEl) {
+        badgeEl.textContent = highlightIndex >= 0
+          ? `Executing Stage 0${highlightIndex + 1} / 0${proj.nodes.length}...`
+          : 'Trace Complete · All Stages Verified';
+      }
+    }
+
+    let simInterval = null;
+    function runArchitectureTrace() {
+      if (simInterval) clearInterval(simInterval);
+      const proj = ARCH_PROJECTS[appState.activeArchProject];
+      if (!proj) return;
+      let step = 0;
+      renderArchitectureSandbox(0);
+      simInterval = setInterval(() => {
+        step += 1;
+        if (step < proj.nodes.length) {
+          renderArchitectureSandbox(step);
+        } else {
+          clearInterval(simInterval);
+          simInterval = null;
+          renderArchitectureSandbox(-1);
+          showToast(`Simulated ${proj.title} trace completed!`);
+        }
+      }, 420);
+    }
+
+    // --- 7. Project & Experience & Skill Filters ---
+    function filterProjects(tag) {
+      ['all', 'kafka-redis', 'security-jwt'].forEach((t) => {
+        const btn = document.getElementById('projFilter-' + t);
+        if (!btn) return;
+        if (t === tag) {
+          btn.className = 'rounded-lg border border-emerald-500 bg-emerald-500/20 px-3 py-1.5 font-mono text-xs font-semibold text-emerald-300 transition';
+        } else {
+          btn.className = 'rounded-lg border border-slate-700 bg-slate-900 px-3 py-1.5 font-mono text-xs text-slate-300 transition hover:border-slate-500';
+        }
+      });
+
+      document.querySelectorAll('.project-card').forEach((card) => {
+        const tags = (card.getAttribute('data-tags') || '').split(' ');
+        if (tag === 'all' || tags.includes(tag)) {
+          card.classList.remove('hidden');
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+    }
+
+    function filterExperience(expType) {
+      ['all', 'work', 'edu'].forEach((t) => {
+        const btn = document.getElementById('expTab-' + t);
+        if (!btn) return;
+        if (t === expType) {
+          btn.className = 'rounded-lg border border-emerald-500 bg-emerald-500/20 px-3 py-1.5 font-mono text-xs font-semibold text-emerald-300 transition';
+        } else {
+          btn.className = 'rounded-lg border border-slate-700 bg-slate-900 px-3 py-1.5 font-mono text-xs text-slate-300 transition hover:border-slate-500';
+        }
+      });
+
+      document.querySelectorAll('.exp-card').forEach((card) => {
+        const type = card.getAttribute('data-exp-type');
+        if (expType === 'all' || type === expType) {
+          card.classList.remove('hidden');
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+    }
+
+    function filterSkillCards(query) {
+      const q = (query || '').trim().toLowerCase();
+      document.querySelectorAll('.skill-category-card').forEach((card) => {
+        const kw = (card.getAttribute('data-skill-keywords') || '').toLowerCase();
+        const text = card.textContent.toLowerCase();
+        if (!q || kw.includes(q) || text.includes(q)) {
+          card.classList.remove('hidden');
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+    }
+
+    // --- 8. Recruiter Outreach Composer ---
+    function updateOutreachPreview() {
+      const companyEl = document.getElementById('recruiterCompanyInput');
+      const roleEl = document.getElementById('recruiterRoleInput');
+      const topicEl = document.getElementById('recruiterTopicSelect');
+      const textareaEl = document.getElementById('outreachMessageTextarea');
+      const mailtoEl = document.getElementById('mailtoOutreachLink');
+
+      if (!companyEl || !roleEl || !topicEl || !textareaEl || !mailtoEl) return;
+
+      const company = companyEl.value.trim() || 'our engineering team';
+      const role = roleEl.value.trim() || 'Backend Software Engineer';
+      const topic = topicEl.value;
+
+      let actionLine = 'Would you be available for a quick 15-minute introductory call this week to discuss the role?';
+      if (topic === 'technical') {
+        actionLine = 'We would love to invite you to a Java & Backend System Design technical interview round this week.';
+      } else if (topic === 'oa') {
+        actionLine = 'We would like to share our online backend/DSA coding assessment with you as the first step.';
+      }
+
+      const msg = `Hi Pawan,\n\nI reviewed your backend engineering portfolio and was impressed by your Java/Spring Boot microservices work (especially the 60% Redis latency reduction, ACID Kafka payment pipeline, and Accenture enterprise training).\n\nWe are hiring for a ${role} role at ${company}. ${actionLine}\n\nBest regards,\nHiring Team — ${company}`;
+      textareaEl.value = msg;
+
+      const subject = encodeURIComponent(`Interview Opportunity: ${role} at ${company} — Pawan Ghode`);
+      const body = encodeURIComponent(msg);
+      mailtoEl.href = `mailto:pawanghode85@gmail.com?subject=${subject}&body=${body}`;
+    }
+
+    function copyOutreachMessage() {
+      const textareaEl = document.getElementById('outreachMessageTextarea');
+      if (!textareaEl) return;
+      copyText(textareaEl.value, 'Recruiter outreach message copied to clipboard!');
+    }
+
+    // --- 9. Copy Helpers, Resume Modal & Command Palette ---
+    function copyText(text, toastMsg) {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => {
+          showToast(toastMsg || 'Copied to clipboard!');
+        }).catch(() => {
+          fallbackCopy(text, toastMsg);
+        });
+      } else {
+        fallbackCopy(text, toastMsg);
+      }
+    }
+
+    function fallbackCopy(text, toastMsg) {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      try {
+        document.execCommand('copy');
+        showToast(toastMsg || 'Copied to clipboard!');
+      } catch (e) {
+        showToast('Copy completed');
+      }
+      document.body.removeChild(ta);
+    }
+
+    function copyRecruiterSummary() {
+      const summary = [
+        'CANDIDATE BRIEF: PAWAN JANARDHAN GHODE',
+        'Role Target: Backend Developer (Java 11/17, Spring Boot, Microservices, Kafka, Redis, PostgreSQL/MySQL)',
+        'Education: B.Tech in Information Technology — YCCE Nagpur (2022–2026) | CGPA: 7.90/10',
+        'Experience:',
+        '  • Accenture — Pre-Onboarding Advance ASE Trainee (06/2026–09/2026): Distributed cloud config (SAP BTP) & 100% consistent zero-downtime DB migration simulation.',
+        '  • UniConverge Technologies — Core Java Intern (03/2026–04/2026): Modular Core Java Banking System; cut execution errors by 40%.',
+        'Key Backend Projects:',
+        '  • Fintech Payment Processing API (Spring Boot, MySQL, Apache Kafka): ACID transactions, idempotent REST retries, async Kafka consumers.',
+        '  • Scalable Movie Ticketing Backend (Spring Boot, PostgreSQL, Redis, Docker, JWT): DB pessimistic/optimistic locking, -60% latency via Redis.',
+        'Achievements: 400+ LeetCode DSA problems (Top 10% Global Contests) | Published AI Physiotherapy Research Paper (DOI: 10.21203/rs.3.rs-10049531/v1)',
+        'Contact: pawanghode85@gmail.com | +91 9579081065 | github.com/Pawan-Ghode | linkedin.com/in/pawan-ghode'
+      ].join('\n');
+      copyText(summary, 'Executive Candidate Pitch copied for your hiring notes!');
+    }
+
+    function copyPlainTextResume() {
+      copyRecruiterSummary();
+    }
+
+    function openResumeModal() {
+      const modal = document.getElementById('resumeModal');
+      if (modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      }
+    }
+
+    function closeResumeModal() {
+      const modal = document.getElementById('resumeModal');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+    }
+
+    function openCmdPalette() {
+      const modal = document.getElementById('cmdPaletteModal');
+      const input = document.getElementById('cmdSearchInput');
+      if (modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        filterCmdPalette('');
+        if (input) {
+          input.value = '';
+          setTimeout(() => input.focus(), 50);
+        }
+      }
+    }
+
+    function closeCmdPalette() {
+      const modal = document.getElementById('cmdPaletteModal');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+    }
+
+    function filterCmdPalette(query) {
+      const listEl = document.getElementById('cmdPaletteList');
+      if (!listEl) return;
+      const q = (query || '').trim().toLowerCase();
+      const filtered = CMD_ACTIONS.filter((item) => !q || item.label.toLowerCase().includes(q) || item.hint.toLowerCase().includes(q));
+      listEl.innerHTML = filtered.map((item, idx) => `
+        <button
+          type="button"
+          onclick="triggerCmdAction(${idx}, '${q.replace(/'/g, "\\'")}')"
+          class="flex w-full items-center justify-between rounded-xl px-3.5 py-2.5 text-left text-xs text-slate-200 transition hover:bg-emerald-500/15 hover:text-emerald-300"
+        >
+          <span class="font-medium">${item.label}</span>
+          <span class="font-mono text-[10px] text-slate-400">${item.hint}</span>
+        </button>
+      `).join('');
+    }
+
+    function triggerCmdAction(filteredIndex, query) {
+      const q = (query || '').trim().toLowerCase();
+      const filtered = CMD_ACTIONS.filter((item) => !q || item.label.toLowerCase().includes(q) || item.hint.toLowerCase().includes(q));
+      const chosen = filtered[filteredIndex];
+      closeCmdPalette();
+      if (chosen && chosen.action) chosen.action();
+    }
+
+    function scrollToSection(id) {
+      const el = document.getElementById(id);
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function toggleTheme() {
+      appState.theme = appState.theme === 'dark' ? 'light' : 'dark';
+      const root = document.documentElement;
+      if (appState.theme === 'light') {
+        root.classList.add('light-mode');
+        showToast('Switched to Executive Slate Light Mode');
+      } else {
+        root.classList.remove('light-mode');
+        showToast('Switched to Cyber-Emerald Dark Mode');
+      }
+      try {
+        localStorage.setItem('pg_portfolio_theme', appState.theme);
+      } catch (e) {}
+    }
+
+    let toastTimer = null;
+    function showToast(msg) {
+      const container = document.getElementById('toastContainer');
+      const textEl = document.getElementById('toastMessage');
+      if (!container || !textEl) return;
+      textEl.textContent = msg;
+      container.classList.remove('hidden');
+      container.classList.add('flex');
+      if (toastTimer) clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        container.classList.add('hidden');
+        container.classList.remove('flex');
+      }, 3200);
+    }
+
+    // --- 10. Initialization ---
+    window.addEventListener('DOMContentLoaded', () => {
+      renderStackMatcher();
+      selectArchProject('fintech');
+      updateOutreachPreview();
+      if (window.lucide) window.lucide.createIcons();
+      setInterval(rotateTypewriter, 3600);
+
+      window.addEventListener('keydown', (e) => {
+        if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+          e.preventDefault();
+          openCmdPalette();
+        } else if (e.key === 'Escape') {
+          closeCmdPalette();
+          closeResumeModal();
+        }
+      });
+    });
+  </script>
 </body>
 </html>
